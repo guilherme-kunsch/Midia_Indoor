@@ -1,0 +1,56 @@
+.container{
+    width: 100%;
+    height: auto;
+
+    .header{
+
+        width: 100%;
+        justify-content: space-between;
+        text-align: center;
+        // height: 50px;
+        // border-bottom: 1px solid #000;
+        background-color: #000;
+        display: flex;
+
+        h1{
+            color: white;
+            padding: 10px;
+        }
+
+    }
+    
+    .senhasAtuais{
+        color: black;
+        display: flex;
+        margin: 50px;
+
+        label{
+            padding: 20px;
+        }
+
+        h4{
+            color: black;           
+            margin-left: 50px; 
+            background-color: #e0dddd;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #000;
+        }
+
+    }
+    .buttonsSenhas{
+        color: black;
+        justify-content: space-between;
+        display: flex;
+
+        h4{
+            color: black;           
+            margin:0 50px; 
+            background-color: #e0dddd;
+            padding: 20px 100px;
+            border-radius: 10px;
+            border: 1px solid #000;
+            cursor: pointer;
+        }
+    }
+}
