@@ -3,6 +3,7 @@ import { HashRouter, Route, Routes } from "react-router-dom"
 
 import GerenciarSenhas from "./pages/GerenciarSenhas";
 import Home from "./pages/Home";
+import { Midia } from "./pages/ImportMidia/Midia";
 
 
 export default function App(){
@@ -15,7 +16,9 @@ export default function App(){
                         exact path="/GerenciarSenhas"
                         element={<GerenciarSenhas/>}
                     />
+                      <Route  path="/ImportarMidias" element={<Midia/>}/>
                 </Fragment>
+              
             </Routes>
         </HashRouter>
     )
