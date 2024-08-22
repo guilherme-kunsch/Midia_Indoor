@@ -4,6 +4,7 @@ import { HashRouter, Route, Routes } from "react-router-dom"
 import GerenciarSenhas from "./pages/GerenciarSenhas";
 import Home from "./pages/Home";
 import { Midia } from "./pages/ImportMidia/Midia";
+import Dispositivos from "./pages/Dispositivos";
 
 
 export default function App(){
@@ -16,7 +17,11 @@ export default function App(){
                         exact path="/GerenciarSenhas"
                         element={<GerenciarSenhas/>}
                     />
-                      <Route  path="/ImportarMidias" element={<Midia/>}/>
+                    <Route 
+                        exact path="/Dispositivos"
+                        element={<Dispositivos/>}
+                    />
+                      <Route path="/ImportarMidias" element={<Midia/>}/>
                 </Fragment>
               
             </Routes>
