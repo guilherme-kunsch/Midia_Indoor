@@ -1,22 +1,40 @@
-import React from 'react';
-import { FaHome } from "react-icons/fa";
+import React, { useState } from 'react';
+import { IoMenu } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom';
 
 export default function GerenciarSenhas() {
 
+    const [ sidebarStatus, setSidebarStatus ] = useState(false);
+
     const navigate = useNavigate();
+
+    const alterStatusSideBar = () => {
+        setSidebarStatus(!sidebarStatus)
+    }
+
     
     return (
         <div className="w-full">
             <div className="w-full flex justify-between items-center bg-black text-white py-4 px-6">
-                <FaHome 
+                <IoMenu 
                     size={30} 
                     className="cursor-pointer" 
-                    onClick={() => navigate('/')}
+                    onClick={() => alterStatusSideBar()}
                 />
                 <h1 className="text-lg font-bold">Gerenciar Senhas</h1>
                 <h1 className="opacity-0"> </h1>
             </div>
+
+            {sidebarStatus && 
+                <>
+                    <div className="w-1/5 h-screen bg-black z-10 fixed justify-center text-center">
+                        <h3 className="bg-white opacity-90 text-black mx-8 my-4 rounded-lg cursor-pointer" onClick={() => navigate('/Playlist')}>Playlist</h3>
+                        <h3 className="bg-white opacity-90 text-black mx-8 my-4 rounded-lg cursor-pointer" onClick={() => navigate('/Gerenciamento')}>Gerenciamento</h3>
+                        <h3 className="bg-white opacity-90 text-black mx-8 my-4 rounded-lg cursor-pointer" onClick={() => navigate('/GerenciarSenhas')}>Gerenciar Senhas</h3>
+                        <h3 className="bg-white opacity-90 text-black mx-8 my-4 rounded-lg cursor-pointer" onClick={() => navigate('/Dispositivos')}>Dispositivos</h3>
+                    </div>
+                </>
+            }
 
             <div className="mx-80 mt-8 p-8 space-y-8">
                 {/* Senha Normal */}

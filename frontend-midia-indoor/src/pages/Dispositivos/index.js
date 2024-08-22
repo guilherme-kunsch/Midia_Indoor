@@ -27,11 +27,10 @@ export default function Dispositivos(){
             {sidebarStatus && 
                 <>
                     <div className="w-1/5 h-screen bg-black z-10 fixed justify-center text-center">
-                        <h3 className="bg-white opacity-90 text-black mx-8 my-4 rounded-lg" onClick={() => navigate('/Playlist')}>Playlist</h3>
-                        <h3 className="bg-white opacity-90 text-black mx-8 my-4 rounded-lg" onClick={() => navigate('/Gerenciamento')}>Gerenciamento</h3>
-                        <h3 className="bg-white opacity-90 text-black mx-8 my-4 rounded-lg" onClick={() => navigate('/GerenciarSenhas')}>Gerenciar Senhas</h3>
-                        <h3 className="bg-white opacity-90 text-black mx-8 my-4 rounded-lg" onClick={() => navigate('/Senhas')}>Senhas</h3>
-                        <h3 className="bg-white opacity-90 text-black mx-8 my-4 rounded-lg" onClick={() => navigate('/Dispositivos')}>Dispositivos</h3>
+                        <h3 className="bg-white opacity-90 text-black mx-8 my-4 rounded-lg cursor-pointer" onClick={() => navigate('/Playlist')}>Playlist</h3>
+                        <h3 className="bg-white opacity-90 text-black mx-8 my-4 rounded-lg cursor-pointer" onClick={() => navigate('/Gerenciamento')}>Gerenciamento</h3>
+                        <h3 className="bg-white opacity-90 text-black mx-8 my-4 rounded-lg cursor-pointer" onClick={() => navigate('/GerenciarSenhas')}>Gerenciar Senhas</h3>
+                        <h3 className="bg-white opacity-90 text-black mx-8 my-4 rounded-lg cursor-pointer" onClick={() => navigate('/Dispositivos')}>Dispositivos</h3>
                     </div>
                 </>
             }
