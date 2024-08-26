@@ -40,8 +40,8 @@ export default function SideBar({title}) {
                                 }`}
                             />
                         </div>
-                        <ul className='pt-6' onClick={() => navigate('/Playlist')}>
-                            <li className='flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-9 mx-5'>
+                        <ul className='pt-6'>
+                            <li className='flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-9 mx-5'  onClick={() => navigate('/Playlist')}>
                                 <FaRegListAlt
                                     size={20}
                                 />
@@ -51,8 +51,8 @@ export default function SideBar({title}) {
                             </li>
                         </ul>
 
-                        <ul className='pt-6' onClick={() => navigate('/Gerenciamento')}>
-                            <li className='flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-9 mx-5'>
+                        <ul className='pt-6'>
+                            <li className='flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-9 mx-5' onClick={() => navigate('/Gerenciamento')}>
                                 <MdSettings
                                     size={20}
                                 />
@@ -62,8 +62,8 @@ export default function SideBar({title}) {
                             </li>
                         </ul>
 
-                        <ul className='pt-6' onClick={() => navigate('/GerenciarSenhas')}>
-                            <li className='flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-9 mx-5'>
+                        <ul className='pt-6'>
+                            <li className='flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-9 mx-5' onClick={() => navigate('/GerenciarSenhas')}>
                                 <FaLock
                                     size={20}
                                 />
@@ -73,8 +73,8 @@ export default function SideBar({title}) {
                             </li>
                         </ul>
 
-                        <ul className='pt-6' onClick={() => navigate('/Dispositivos')}>
-                            <li className='flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-9 mx-5'>
+                        <ul className='pt-6'>
+                            <li className='flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-4 mt-9 mx-5' onClick={() => navigate('/Dispositivos')}>
                                 <MdDevices
                                     size={20}
                                 />
