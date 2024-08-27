@@ -6,7 +6,9 @@ import (
 	"pi4/models"
 	"pi4/service"
 	"pi4/utils"
+	"strings"
 
+	"github.com/gosimple/slug"
 	"github.com/labstack/echo/v4"
 )
 
@@ -24,11 +26,13 @@ func Upload(c echo.Context) error {
 	}
 	fileHashName := utils.NewId()
 	fileExtension := filepath.Ext(file.Filename)
-	fileName := fileHashName + fileExtension
+	fileOldName := strings.Split(file.Filename, ".")[0]
+	fileName := slug.Make(fileOldName) + "_" + fileHashName + fileExtension
 	if err := service.UploadFile(fileName, openedFile); err != nil {
 		return utils.ResponseError(c, http.StatusBadRequest, err.Error())
 	}
-	midia := models.Midias{ID: fileHashName, FileName: fileName}
+	url := "https://pi4.fly.storage.tigris.dev/" + fileName
+	midia := models.Midias{ID: fileHashName, FileName: fileName, FileUrl: url, FileOriginalName: fileOldName}
 	midia, err = service.SaveMidia(midia)
 	if err != nil {
 		return utils.ResponseError(c, http.StatusBadRequest, "error ao salvar midia")
