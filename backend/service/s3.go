@@ -42,3 +42,11 @@ func UploadFile(fileName string, body io.Reader) error {
 	})
 	return err
 }
+
+func DeleteFile(fileName string) error {
+	_, err := s3Client.DeleteObject(context.Background(), &s3.DeleteObjectInput{
+		Bucket: aws.String(bucketName),
+		Key:    aws.String(fileName),
+	})
+	return err
+}
