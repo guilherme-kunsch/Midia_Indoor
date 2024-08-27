@@ -1,10 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import SideBar from '../../components/SideBar'
 import { useNavigate } from "react-router-dom";
 
 export default function Gerenciamento(){
 
     const navigate = useNavigate()
+
+    // useEffect(() => {
+
+    //     const fetchData = async () => {
+
+    //         const response = await fetch("https://mastigadores.fly.dev/midia")
+    //         console.log(response.data)
+    //     }
+
+    //     fetchData()
+
+    // }, [])
 
     return (
         <div className="w-full">
@@ -24,6 +36,7 @@ export default function Gerenciamento(){
                         <h3 className="text-black bg-green-300 py-4 px-10 rounded-lg">Editar</h3>
                         <h3 className="text-black bg-red-300 py-4 px-10 rounded-lg">Excluir</h3>
                     </div>
+                        {/* <img width={400} src={"https://pi4.fly.storage.tigris.dev/2023-logo-ucl-azul-1_2BJK20PBB18MC.png"} alt="logo" /> */}
                     <div className="justify-between items-center flex my-8">
                         <h3 className="text-black bg-gray-300 py-4 px-28 rounded-lg">Mídia 2</h3>
                         <h3 className="text-black bg-green-300 py-4 px-10 rounded-lg">Editar</h3>

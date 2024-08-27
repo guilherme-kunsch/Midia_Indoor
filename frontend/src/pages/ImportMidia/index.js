@@ -4,6 +4,18 @@ import SideBar from '../../components/SideBar'
 
 export default function Midia(){
 
+  const enviarImagem = async (e) => {
+    const file = e.target.files[0]
+    const formData = new FormData()
+
+    formData.append('file', file)
+
+    fetch("https://mastigadores.fly.dev/midia/upload", {
+      method: 'POST',
+      body: formData,
+    })
+  }
+
   return(
     <div className="w-full">   
 
@@ -16,7 +28,7 @@ export default function Midia(){
           <div className="absolute inset-0 m-3 p-4 border-dashed border-2 border-gray-400 rounded-md flex items-center justify-center bg-white active:bg-blue-900">
             <p className="text-center font-semibold">Selecione um arquivo ou solte aqui.</p>
           </div>
-          <input type="file" id="file-input" className="absolute inset-0 opacity-0 cursor-pointer" />
+          <input type="file" id="file-input" className="absolute inset-0 opacity-0 cursor-pointer" onChange={enviarImagem}/>
         </label>
       </div>
     </div>
