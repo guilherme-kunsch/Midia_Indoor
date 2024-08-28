@@ -11,7 +11,7 @@ export default function Home() {
             />              
 
             <div 
-                className="text-center bg-cover bg-center flex flex-col items-center justify-center "
+                className="text-center bg-cover bg-center flex flex-col items-center justify-center mt-16"
                 style={{ backgroundImage: `url(${logo})`, height: '90vh' }}
             >
                 <div className="bg-black bg-opacity-50 p-4 rounded-md shadow-lg">
