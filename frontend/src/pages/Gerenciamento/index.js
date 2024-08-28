@@ -32,6 +32,22 @@ export default function Gerenciamento(){
         setShowPopUpEdit(true);
     };
 
+    const handleDelete = async (id) => {
+
+        const confirm = window.confirm('Tem certeza que deseja remover essa mídia?')
+
+        if(!confirm){
+            return;
+        }
+
+        const remove = await fetch(`https://mastigadores.fly.dev/midia/${id}`, {
+            method: 'DELETE'
+        })
+
+        window.location.reload()
+
+    }
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -66,13 +82,13 @@ export default function Gerenciamento(){
 
                             <h1 className="text-black w-full text-center">{midia.file_name}</h1>
 
-                            <div className=" items-center my-8" onClick={() => handleImagemClick(midia.file_url)}>
-                                <img width={400} src={midia.file_url} alt="logo" />
+                            <div className="h-64 justify-center flex text-center m-auto items-center my-8" onClick={() => handleImagemClick(midia.file_url)}>
+                                <img className="max-h-64" src={midia.file_url} alt="logo" />
                             </div>
 
                             <div className="justify-between items-center flex mt-8">
                                 <h3 className="text-black bg-green-300 py-4 px-10 rounded-lg" onClick={() => handleEditClick(midia.file_name)}>Editar</h3>
-                                <h3 className="text-black bg-red-300 py-4 px-10 rounded-lg">Excluir</h3>
+                                <h3 className="text-black bg-red-300 py-4 px-10 rounded-lg cursor-pointer" onClick={() => handleDelete(midia.id)}>Excluir</h3>
                             </div>
 
                         </div>

@@ -9,13 +9,11 @@ export default function PopUpImage({ setShowPopUp, img }) {
     return (
         
         <div className="fixed inset-0 z-50 flex items-center justify-center ">
-            <div className="absolute inset-0 bg-black opacity-30"></div> {/* Fundo escuro semi-transparente */}
+            <div className="absolute inset-0 bg-black opacity-40"></div> {/* Fundo escuro semi-transparente */}
 
             <Popup open={true} onClose={closeModal} modal nested>
-                <div className="h-full m-auto bg-white rounded-lg shadow-md shadow-dark-blue">
-
-                    <img width={800} src={img} alt="logo" />
-
+                <div className="h-full m-auto bg-white rounded-lg">
+                    <img className="max-h-screen" src={img} alt="logo" />
                 </div>
             </Popup>
         </div>
