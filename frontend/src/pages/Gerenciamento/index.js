@@ -14,28 +14,7 @@ export default function Gerenciamento() {
   const [imagem, setImagem] = useState(null);
   const [midiaTitle, setMidiaTitle] = useState(null);
 
-  const [midias, setMidias] = useState([
-    {
-      url: "https://pi4.fly.storage.tigris.dev/2023-logo-ucl-azul-1_2BJK20PBB18MC.png",
-      title: "GUILHERME",
-    },
-    {
-      url: "https://pi4.fly.storage.tigris.dev/2023-logo-ucl-azul-1_2BJK20PBB18MC.png",
-      title: "JOÃO VICTOR",
-    },
-    {
-      url: "https://pi4.fly.storage.tigris.dev/2023-logo-ucl-azul-1_2BJK20PBB18MC.png",
-      title: "CARITA",
-    },
-    {
-      url: "https://pi4.fly.storage.tigris.dev/2023-logo-ucl-azul-1_2BJK20PBB18MC.png",
-      title: "GABRIEL",
-    },
-    {
-      url: "https://pi4.fly.storage.tigris.dev/2023-logo-ucl-azul-1_2BJK20PBB18MC.png",
-      title: "CAUAN",
-    },
-  ]);
+  const [midias, setMidias] = useState([]);
 
   const navigate = useNavigate();
 
@@ -87,14 +66,14 @@ export default function Gerenciamento() {
     <div className="w-full">
       <SideBar title={"GERENCIAMENTO"} />
 
-      <div className="justify-end text-center flex mx-9 mt-24">
-                <h3 className="text-black bg-green-300 p-4 w-60 rounded-lg cursor-pointer" onClick={() => navigate('/ImportarMidias')}>+ Nova Mídia</h3>
-            </div>
+      <div className="justify-end m-4 text-center flex">
+        <h3 className="text-black text-sm bg-green-300 p-2 w-40 mt-16 rounded-lg" onClick={() => navigate('/ImportarMidias')}>+ Nova Mídia</h3>
+      </div>
 
             <div className="pl-40 w-full grid grid-cols-2">
                 {midias.map((midia, index) => (
 
-                    <div key={index} className="w-9/12 h-70 my-9 bg-gray-200  rounded-lg">
+                    <div key={index} className="w-9/12 h-70 mb-9 bg-gray-200  rounded-lg">
 
                             <div className="justify-center text-center flex bg-dark-blue p-4 rounded-t-lg">
                                 <TiDelete  size={22} color="Red" className="cursor-pointer" onClick={() => handleDelete(midia.id)}/>
@@ -103,8 +82,13 @@ export default function Gerenciamento() {
 
 
 
-                            <div className="h-64 justify-center flex text-center m-auto items-center my-4" onClick={() => handleImagemClick(midia.file_url)}>
-                                <img className="max-h-64" src={midia.file_url} alt="logo" />
+                            <div className="h-60 justify-center flex text-center m-auto items-center">
+
+                                {midia.file_name.split('.')[1] == 'mp4' ? 
+                                  <video className="max-h-60" controls><source src={midia.file_url} type="video/mp4"/></video> : 
+                                  <img className="max-h-60" src={midia.file_url} alt="logo" onClick={() => handleImagemClick(midia.file_url)}/>
+                                }
+                                
                             </div>
 
                             {/* <div className="justify-center items-center flex mt-8">
