@@ -4,9 +4,12 @@ import { useNavigate } from "react-router-dom";
 import PopUpImage from "./PopUpImage";
 import PopUpEditMidia from "./PopUpEditMidia";
 
+import { TiDelete } from "react-icons/ti";
+
 export default function Gerenciamento() {
   const [showPopUp, setShowPopUp] = useState(false);
   const [showPopUpEdit, setShowPopUpEdit] = useState(false);
+
 
   const [imagem, setImagem] = useState(null);
   const [midiaTitle, setMidiaTitle] = useState(null);
@@ -77,52 +80,40 @@ export default function Gerenciamento() {
     };
 
     fetchData();
+
   }, []);
 
   return (
     <div className="w-full">
       <SideBar title={"GERENCIAMENTO"} />
 
-      <div className="justify-end text-center flex mx-14 mt-9">
-        <h3
-          className="text-black bg-green-300 p-4 w-60 rounded-lg cursor-pointer"
-          onClick={() => navigate("/ImportarMidias")}
-        >
-          Nova Mídia
-        </h3>
-      </div>
-
-      <div className="mx-36 w-full grid grid-cols-2">
-        {midias.map((midia, index) => (
-          <div
-            key={index}
-            className="w-9/12 h-70 my-12 bg-gray-200 py-8 px-20 rounded-lg"
-          >
-            <h1 className="text-black w-full text-center">{midia.file_name}</h1>
-
-            <div
-              className="h-64 justify-center flex text-center m-auto items-center my-8"
-              onClick={() => handleImagemClick(midia.file_url)}
-            >
-              <img className="max-h-64" src={midia.file_url} alt="logo" />
+      <div className="justify-end text-center flex mx-9 mt-24">
+                <h3 className="text-black bg-green-300 p-4 w-60 rounded-lg cursor-pointer" onClick={() => navigate('/ImportarMidias')}>+ Nova Mídia</h3>
             </div>
 
-            <div className="justify-between items-center flex mt-8">
-              <h3
-                className="text-black bg-green-300 py-4 px-10 rounded-lg"
-                onClick={() => handleEditClick(midia.file_name)}
-              >
-                Editar
-              </h3>
-              <h3
-                className="text-black bg-red-300 py-4 px-10 rounded-lg cursor-pointer"
-                onClick={() => handleDelete(midia.id)}
-              >
-                Excluir
-              </h3>
-            </div>
-          </div>
-        ))}
+            <div className="pl-40 w-full grid grid-cols-2">
+                {midias.map((midia, index) => (
+
+                    <div key={index} className="w-9/12 h-70 my-9 bg-gray-200  rounded-lg">
+
+                            <div className="justify-center text-center flex bg-dark-blue p-4 rounded-t-lg">
+                                <TiDelete  size={22} color="Red" className="cursor-pointer" onClick={() => handleDelete(midia.id)}/>
+                                <h1 className="text-ligth-white w-full mr-6">{midia.file_name}</h1>
+                            </div>
+
+
+
+                            <div className="h-64 justify-center flex text-center m-auto items-center my-4" onClick={() => handleImagemClick(midia.file_url)}>
+                                <img className="max-h-64" src={midia.file_url} alt="logo" />
+                            </div>
+
+                            {/* <div className="justify-center items-center flex mt-8">
+                                <h3 className="text-black bg-green-300 py-4 px-10 rounded-lg" onClick={() => handleEditClick(midia.file_name)}>Editar</h3>
+                                <h3 className="text-black bg-red-300 py-4 px-24 rounded-lg cursor-pointer" onClick={() => handleDelete(midia.id)}>Excluir</h3>
+                            </div> */}
+
+                        </div>
+                ))}
       </div>
 
       {showPopUp && <PopUpImage setShowPopUp={setShowPopUp} img={imagem} />}
