@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import SideBar from '../../components/SideBar'
 import { useNavigate } from "react-router-dom";
 import PopUpImage from "./PopUpImage";
+import PopUpEditMidia from "./PopUpEditMidia";
 
 export default function Gerenciamento(){
 
-    const [showPopUp, setShowPopUp] = useState(false);
+    const [ showPopUp, setShowPopUp ] = useState(false);
+    const [ showPopUpEdit, setShowPopUpEdit ] = useState(false);
 
     const [ imagem, setImagem ] = useState(null)
+    const [ midiaTitle, setMidiaTitle ] = useState(null)
 
     const [ midias, setMidias ] = useState([
         {url: "https://pi4.fly.storage.tigris.dev/2023-logo-ucl-azul-1_2BJK20PBB18MC.png", title: 'GUILHERME'},
@@ -24,6 +27,11 @@ export default function Gerenciamento(){
         setShowPopUp(true);
     };
 
+    const handleEditClick = (midia) => {
+        setMidiaTitle(midia)
+        setShowPopUpEdit(true);
+    };
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -32,7 +40,7 @@ export default function Gerenciamento(){
                 });
                 console.log('teste')
                 const data = await response.json();
-                console.log(data); 
+                setMidias(data)
             } catch (error) {
                 console.error("Erro ao buscar dados:", error);
             }
@@ -56,14 +64,14 @@ export default function Gerenciamento(){
 
                         <div key={index} className="w-9/12 h-70 my-12 bg-gray-200 py-8 px-20 rounded-lg">
 
-                            <h1 className="text-black w-full text-center">{midia.title}</h1>
+                            <h1 className="text-black w-full text-center">{midia.file_name}</h1>
 
-                            <div className=" items-center my-8" onClick={() => handleImagemClick(midia.url)}>
-                                <img width={400} src={midia.url} alt="logo" />
+                            <div className=" items-center my-8" onClick={() => handleImagemClick(midia.file_url)}>
+                                <img width={400} src={midia.file_url} alt="logo" />
                             </div>
 
                             <div className="justify-between items-center flex mt-8">
-                                <h3 className="text-black bg-green-300 py-4 px-10 rounded-lg">Editar</h3>
+                                <h3 className="text-black bg-green-300 py-4 px-10 rounded-lg" onClick={() => handleEditClick(midia.file_name)}>Editar</h3>
                                 <h3 className="text-black bg-red-300 py-4 px-10 rounded-lg">Excluir</h3>
                             </div>
 
@@ -73,8 +81,15 @@ export default function Gerenciamento(){
 
             {showPopUp && 
                 <PopUpImage 
-                    setShowPopUp={setShowPopUp}
+                setShowPopUp={setShowPopUp}
                     img={imagem}
+                />
+            }
+
+            {showPopUpEdit &&
+                <PopUpEditMidia
+                    setShowPopUpEdit={setShowPopUpEdit}
+                    Midia={midiaTitle}
                 />
             }
 
