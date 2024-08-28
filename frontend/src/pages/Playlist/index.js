@@ -34,7 +34,6 @@ export default function Playlist(){
 
     const handleNewPlaylistClick = () => {
         setShowPopUp(true);
-        console.log(showPopUp)
     };
 
     const editPlayList = (playlist) => {

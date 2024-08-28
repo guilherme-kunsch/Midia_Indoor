@@ -1,19 +1,33 @@
 import React from "react";
 import SideBar from '../../components/SideBar'
+import { useNavigate } from "react-router-dom";
 
 
 export default function Midia(){
 
+  const navigate = useNavigate();
+
   const enviarImagem = async (e) => {
-    const file = e.target.files[0]
-    const formData = new FormData()
 
-    formData.append('file', file)
+    try{
 
-    fetch("https://mastigadores.fly.dev/midia/upload", {
-      method: 'POST',
-      body: formData,
-    })
+      const file = e.target.files[0]
+      const formData = new FormData()
+      
+      formData.append('file', file)
+      
+      await fetch("https://mastigadores.fly.dev/midia/upload", {
+        method: 'POST',
+        body: formData,
+      })
+      
+      alert("Mídia salva com sucesso!")
+      navigate('/Gerenciamento')
+      
+    }catch(error){
+      alert("Erro ao realizar upload da Mídia, se persiste contate os Mastigadores")
+      console.error("Erro: " + error.message)
+    }
   }
 
   return(

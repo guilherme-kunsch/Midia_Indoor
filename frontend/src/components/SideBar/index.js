@@ -22,7 +22,7 @@ export default function SideBar({ title }) {
       <div
         className={`${
           open ? "w-72" : "w-20 "
-        } h-screen bg-dark-purple z-10 fixed justify-center text-center duration-300`}
+        } h-screen bg-dark-purple z-10 fixed justify-center text-center duration-300 shadow-md shadow-dark-purple`}
       >
         <img
           src={control}
@@ -91,7 +91,7 @@ export default function SideBar({ title }) {
         </ul>
       </div>
 
-      <div className="w-full flex justify-center items-center bg-dark-purple text-white py-4 px-6">
+      <div className="w-full flex justify-center items-center bg-dark-purple text-white py-4 px-6 shadow shadow-dark-purple">
         <h1 className="text-2xl font-bold">{title}</h1>
       </div>
     </div>
