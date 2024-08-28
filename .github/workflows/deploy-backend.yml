@@ -16,4 +16,3 @@ jobs:
       - uses: actions/checkout@v4
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: flyctl deploy --remote-only --config=./backend/fly.toml --access-token=${{ secrets.FLY_API_TOKEN }}
-        
