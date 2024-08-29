@@ -23,10 +23,10 @@ export default function Gerenciamento() {
     setShowPopUp(true);
   };
 
-  const handleEditClick = (midia) => {
-    setMidiaTitle(midia);
-    setShowPopUpEdit(true);
-  };
+  // const handleEditClick = (midia) => {
+  //   setMidiaTitle(midia);
+  //   setShowPopUpEdit(true);
+  // };
 
   const handleDelete = async (id) => {
     const confirm = window.confirm(
@@ -37,7 +37,7 @@ export default function Gerenciamento() {
       return;
     }
 
-    const remove = await fetch(`https://mastigadores.fly.dev/midia/${id}`, {
+    await fetch(`https://mastigadores.fly.dev/midia/${id}`, {
       method: "DELETE",
     });
 
@@ -84,7 +84,7 @@ export default function Gerenciamento() {
 
                             <div className="h-60 justify-center flex text-center m-auto items-center">
 
-                                {midia.file_name.split('.')[1] == 'mp4' ? 
+                                {midia.file_name.split('.')[1] === 'mp4' ? 
                                   <video className="max-h-60" controls><source src={midia.file_url} type="video/mp4"/></video> : 
                                   <img className="max-h-60" src={midia.file_url} alt="logo" onClick={() => handleImagemClick(midia.file_url)}/>
                                 }
