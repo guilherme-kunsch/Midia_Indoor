@@ -12,13 +12,10 @@ func AddRoutes(e *echo.Echo) {
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins:     []string{"*"},
 		AllowCredentials: false,
-		AllowMethods:     []string{"*"},
+		AllowMethods:     []string{http.MethodDelete, http.MethodGet, http.MethodPost, http.MethodPatch},
 		AllowHeaders:     []string{"*"},
 		ExposeHeaders:    []string{"*"},
 		MaxAge:           86400,
-		Skipper: func(c echo.Context) bool {
-			return c.Request().Method == http.MethodOptions
-		},
 	}))
 	e.GET("/", controller.Healthchecker)
 	midia := e.Group("/midia")
@@ -27,5 +24,13 @@ func AddRoutes(e *echo.Echo) {
 		midia.GET("/:id", controller.GetMidia)
 		midia.GET("", controller.GetMidias)
 		midia.DELETE("/:id", controller.DeleteMidia)
+	}
+	playlist := e.Group("/playlist")
+	{
+		playlist.POST("", controller.CreatePlaylist)
+		playlist.GET("/:id", controller.GetPlaylist)
+		playlist.GET("", controller.GetPlaylists)
+		playlist.PATCH("/:id", controller.UpdatePlaylist)
+		playlist.DELETE("/:id", controller.DeletePlaylist)
 	}
 }
