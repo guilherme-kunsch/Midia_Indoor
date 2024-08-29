@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SideBar from "../../components/SideBar";
 import PopUpNovaPlaylist from "./PopUpNovaPlayList";
 import { MdSettings } from 'react-icons/md'
@@ -10,27 +10,24 @@ export default function Playlist(){
     const [showPopUpEdit, setShowPopUpEdit] = useState(false);
     const [selectedPlaylist, setSelectedPlaylist] = useState(null);
 
-    const [ playlists, setPlaylists ] = useState([
-        {
-            name: 'Guilherme', 
-            midias: ['doente.png', 'pateta.jpg', 'sonso.gif']
-        },
+    const [ playlists, setPlaylists ] = useState([])
 
-        {
-            name: 'Gabriel', 
-            midias: ['parasita.png', 'besta.jpg', 'maluco.gif']
-        },
-
-        {
-            name: 'Cauan', 
-            midias: ['doente.png', 'pateta.jpg', 'ViadinhoPãoComOvo.gif']
-        },
-
-        {
-            name: 'Carita', 
-            midias: ['Testando.png', 'Chamon.jpg', 'Zirlene.gif']
-        }
-    ])
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+              const response = await fetch("https://mastigadores.fly.dev/playlist", {
+                method: "GET",
+              });
+              const data = await response.json();
+              console.log(data)
+              setPlaylists(data);
+            } catch (error) {
+              console.error("Erro ao buscar dados:", error);
+            }
+          };
+      
+          fetchData();
+    }, [])
 
     const handleNewPlaylistClick = () => {
         setShowPopUp(true);
@@ -50,7 +47,7 @@ export default function Playlist(){
             <div className="justify-end m-4 text-center flex">
                 <h3 className="text-black text-sm bg-green-300 p-2 w-40 mt-16 rounded-lg"  onClick={handleNewPlaylistClick}>+ Nova Playlist</h3>
             </div>
-            <div className="px-64 mt-4 w-full grid grid-cols-3">
+            <div className="px-64 mt-4 w-full grid grid-cols-2">
                 {playlists.map((play, index) => (
 
                     <div key={index} className="mb-12 px-4 justify-center text-center">                        
@@ -62,7 +59,7 @@ export default function Playlist(){
                         <div className="w-full flex mt-0 p-0">
                             <div className="w-full h-70 bg-cards  px-10 rounded-b-lg">
                                 {play.midias.map((midia, midiaIndex) => (
-                                    <h3 key={midiaIndex} className="text-black bg-flash-white py-4 my-4 rounded-lg">{midia}</h3>
+                                    <h3 key={midiaIndex} className="text-black bg-flash-white py-4 my-4 rounded-lg">{midia.file_name}</h3>
                                 ))}
                             </div>                    
                         </div>
