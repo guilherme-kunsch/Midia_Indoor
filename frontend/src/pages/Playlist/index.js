@@ -70,7 +70,7 @@ export default function Playlist(){
 
 
             <div className="justify-end m-4 text-center flex">
-                <h3 className="text-black text-sm bg-green-300 p-2 w-40 mt-16 rounded-lg"  onClick={handleNewPlaylistClick}>+ Nova Playlist</h3>
+                <h3 className="text-black text-sm bg-green-300 p-2 w-40 mt-16 rounded-lg cursor-pointer"  onClick={handleNewPlaylistClick}>+ Nova Playlist</h3>
             </div>
             
             <div className="px-64 mt-4 w-full grid grid-cols-2">
