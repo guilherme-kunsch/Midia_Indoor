@@ -2,17 +2,17 @@ import React, { useEffect, useState } from "react";
 import SideBar from "../../components/SideBar";
 import { useNavigate } from "react-router-dom";
 import PopUpImage from "./PopUpImage";
-import PopUpEditMidia from "./PopUpEditMidia";
+// import PopUpEditMidia from "./PopUpEditMidia";
 
 import { TiDelete } from "react-icons/ti";
 
 export default function Gerenciamento() {
   const [showPopUp, setShowPopUp] = useState(false);
-  const [showPopUpEdit, setShowPopUpEdit] = useState(false);
+  // const [showPopUpEdit, setShowPopUpEdit] = useState(false);
 
 
   const [imagem, setImagem] = useState(null);
-  const [midiaTitle, setMidiaTitle] = useState(null);
+  // const [midiaTitle, setMidiaTitle] = useState(null);
 
   const [midias, setMidias] = useState([]);
 
@@ -102,12 +102,12 @@ export default function Gerenciamento() {
 
       {showPopUp && <PopUpImage setShowPopUp={setShowPopUp} img={imagem} />}
 
-      {showPopUpEdit && (
+      {/* {showPopUpEdit && (
         <PopUpEditMidia
           setShowPopUpEdit={setShowPopUpEdit}
           Midia={midiaTitle}
         />
-      )}
+      )} */}
     </div>
   );
 }
