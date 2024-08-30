@@ -3,7 +3,7 @@ package models
 import "time"
 
 type (
-	Midias struct {
+	Midia struct {
 		ID               string    `json:"id" bson:"_id"`
 		FileName         string    `json:"file_name" bson:"file_name"`
 		FileOriginalName string    `json:"file_original_name" bson:"file_original_name"`

@@ -32,7 +32,7 @@ func Upload(c echo.Context) error {
 		return utils.ResponseError(c, http.StatusBadRequest, err.Error())
 	}
 	url := "https://pi4.fly.storage.tigris.dev/" + fileName
-	midia := models.Midias{ID: fileHashName, FileName: fileName, FileUrl: url, FileOriginalName: fileOldName}
+	midia := models.Midia{ID: fileHashName, FileName: fileName, FileUrl: url, FileOriginalName: fileOldName}
 	midia, err = service.SaveMidia(midia)
 	if err != nil {
 		return utils.ResponseError(c, http.StatusBadRequest, "error ao salvar midia")
