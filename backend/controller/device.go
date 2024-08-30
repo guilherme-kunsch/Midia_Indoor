@@ -22,7 +22,7 @@ func SaveDevice(c echo.Context) error {
 	}
 	device, err := service.SaveDevice(body)
 	if err != nil {
-		return utils.ResponseError(c, http.StatusBadRequest, "Error ao salvar device")
+		return utils.ResponseError(c, http.StatusBadRequest, "Error ao salvar dispositivo")
 	}
 	return c.JSON(http.StatusOK, device)
 }
