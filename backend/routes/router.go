@@ -33,4 +33,12 @@ func AddRoutes(e *echo.Echo) {
 		playlist.PATCH("/:id", controller.UpdatePlaylist)
 		playlist.DELETE("/:id", controller.DeletePlaylist)
 	}
+	device := e.Group("/device")
+	{
+		device.POST("", controller.SaveDevice)
+		device.GET("/:id", controller.GetDevice)
+		device.GET("", controller.GetAllDevices)
+		device.PATCH("/:id", controller.UpdateDevice)
+		device.DELETE("/:id", controller.DeleteDevice)
+	}
 }
