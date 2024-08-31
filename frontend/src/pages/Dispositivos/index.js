@@ -1,21 +1,52 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SideBar from "../../components/SideBar";
+import PopUpNewDisp from "./PopUpNewDisp";
 
 export default function Dispositivos() {
-  const [dispositivos, setDispositivos] = useState([
-    "Dispositivo1",
-    "Dispositivo 2",
-    "Dispositivo 3",
-  ]);
+
+  const [showPopUp, setShowPopUp] = useState(false);
+
+  const [ dispositivos, setDispositivos ] = useState([]);
+  const [ playlists, setPlaylists ] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("https://mastigadores.fly.dev/device", {
+          method: "GET",
+        });
+
+        const data = await response.json();
+
+        const dataAtu = await Promise.all(
+          data.map(async (disp) => {
+            const response = await fetch(`https://mastigadores.fly.dev/playlist/${disp.playlist_id}`, {
+              method: "GET",
+            });
+            const playlist = await response.json();
+        
+            return { ...disp, playlist_name: playlist.name };
+          })
+        );
+
+        setDispositivos(dataAtu);
+
+      } catch (error) {
+        console.error("Erro ao buscar dados:", error);
+      }
+    };
+
+    fetchData();
+
+  }, []);
 
   const adicionarDispositivo = () => {
-    const novoDispositivo = prompt("Digite o nome do novo dispositivo");
-    setDispositivos([...dispositivos, novoDispositivo]);
+    setShowPopUp(true)
   };
 
   const removerDispositivo = (index) => {
-    const novosDispositivos = dispositivos.filter((_, i) => i !== index);
-    setDispositivos(novosDispositivos);
+    // const novosDispositivos = dispositivos.filter((_, i) => i !== index);
+    // setDispositivos(novosDispositivos);
   };
 
   const gerenciarPlaylist = (dispositivo) => {
@@ -27,7 +58,7 @@ export default function Dispositivos() {
       <SideBar title={"DISPOSITIVOS"} />
 
       <div className="mx-auto mt-12 pt-10 sm:px-6 lg:px-8 max-w-6xl">
-        <div className="text-center mb-8">
+        <div className="text-end mb-8">
           <button
             onClick={adicionarDispositivo}
             className="text-black bg-green-300 p-4  w-full sm:w-60 rounded-lg"
@@ -40,17 +71,21 @@ export default function Dispositivos() {
           {dispositivos.map((dispositivo, index) => (
             <div
               key={index}
-              className="bg-gray-200 p-6 rounded-lg flex flex-col items-center space-y-4"
+              className="bg-gray-200 rounded-lg flex flex-col items-center space-y-4"
             >
-              <h3 className="text-black bg-gray-300 py-2 px-4 rounded-lg text-center">
-                {dispositivo}
+
+              <h3 className="text-white w-full bg-dark-blue py-2 px-4 rounded-t-lg text-center">
+                {dispositivo.name}
               </h3>
-              <div className="flex space-x-4">
+
+              <label className="text-black">{dispositivo.playlist_name}</label>
+
+              <div className="flex space-x-4 pb-4">
                 <button
                   onClick={() => gerenciarPlaylist(dispositivo)}
                   className="text-black bg-green-300 py-2 px-4 rounded-lg"
                 >
-                  Playlist
+                  Salvar
                 </button>
                 <button
                   onClick={() => removerDispositivo(index)}
@@ -62,6 +97,12 @@ export default function Dispositivos() {
             </div>
           ))}
         </div>
+
+        {showPopUp && (
+          <PopUpNewDisp
+          setShowPopUp={setShowPopUp}
+          />
+        )}
       </div>
     </div>
   );
