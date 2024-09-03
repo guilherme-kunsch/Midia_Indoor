@@ -46,7 +46,7 @@ func UpdatePlaylist(c echo.Context) error {
 	}
 	playlist, err := service.UpdatePlaylist(id, body)
 	if err != nil {
-		return utils.ResponseError(c, http.StatusBadRequest, "Error ao encontrar playlist")
+		return utils.ResponseError(c, http.StatusBadRequest, err.Error())
 	}
 	return c.JSON(http.StatusOK, playlist)
 }
