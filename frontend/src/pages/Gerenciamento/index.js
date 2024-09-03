@@ -10,7 +10,6 @@ export default function Gerenciamento() {
   const [showPopUp, setShowPopUp] = useState(false);
   // const [showPopUpEdit, setShowPopUpEdit] = useState(false);
 
-
   const [imagem, setImagem] = useState(null);
   // const [midiaTitle, setMidiaTitle] = useState(null);
 
@@ -59,45 +58,67 @@ export default function Gerenciamento() {
     };
 
     fetchData();
-
   }, []);
 
   return (
     <div className="w-full">
       <SideBar title={"GERENCIAMENTO"} />
+      <div className="flex justify-end">
+        <div className="justify-end m-4 text-center flex">
+          <h3
+            className="text-black text-sm bg-green-300 p-2 w-40 cursor-pointer mt-16 rounded-lg"
+            onClick={() => navigate("/ImportarMidias")}
+          >
+            + Nova Mídia
+          </h3>
+        </div>
 
-      <div className="justify-end m-4 text-center flex">
-        <h3 className="text-black text-sm bg-green-300 p-2 w-40 mt-16 rounded-lg" onClick={() => navigate('/ImportarMidias')}>+ Nova Mídia</h3>
+        <div className="justify-end m-4 text-center flex">
+          <h3
+            className="text-black text-sm bg-green-300 p-2 w-40 cursor-pointer mt-16 rounded-lg"
+            onClick={() => navigate("/ImportarMidiasHtml")}
+          >
+            + Nova Mídia HTML
+          </h3>
+        </div>
       </div>
 
-            <div className="pl-40 w-full grid grid-cols-2">
-                {midias.map((midia, index) => (
+      <div className="pl-40 w-full grid grid-cols-2">
+        {midias.map((midia, index) => (
+          <div key={index} className="w-9/12 h-70 mb-9 bg-gray-200  rounded-lg">
+            <div className="justify-center text-center flex bg-dark-blue p-4 rounded-t-lg">
+              <TiDelete
+                size={22}
+                color="Red"
+                className="cursor-pointer"
+                onClick={() => handleDelete(midia.id)}
+              />
+              <h1 className="text-ligth-white w-full mr-6">
+                {midia.file_name}
+              </h1>
+            </div>
 
-                    <div key={index} className="w-9/12 h-70 mb-9 bg-gray-200  rounded-lg">
+            <div className="h-60 justify-center flex text-center m-auto items-center">
+              {midia.file_name.split(".")[1] === "mp4" ? (
+                <video className="max-h-60" controls>
+                  <source src={midia.file_url} type="video/mp4" />
+                </video>
+              ) : (
+                <img
+                  className="max-h-60"
+                  src={midia.file_url}
+                  alt="logo"
+                  onClick={() => handleImagemClick(midia.file_url)}
+                />
+              )}
+            </div>
 
-                            <div className="justify-center text-center flex bg-dark-blue p-4 rounded-t-lg">
-                                <TiDelete  size={22} color="Red" className="cursor-pointer" onClick={() => handleDelete(midia.id)}/>
-                                <h1 className="text-ligth-white w-full mr-6">{midia.file_name}</h1>
-                            </div>
-
-
-
-                            <div className="h-60 justify-center flex text-center m-auto items-center">
-
-                                {midia.file_name.split('.')[1] === 'mp4' ? 
-                                  <video className="max-h-60" controls><source src={midia.file_url} type="video/mp4"/></video> : 
-                                  <img className="max-h-60" src={midia.file_url} alt="logo" onClick={() => handleImagemClick(midia.file_url)}/>
-                                }
-                                
-                            </div>
-
-                            {/* <div className="justify-center items-center flex mt-8">
+            {/* <div className="justify-center items-center flex mt-8">
                                 <h3 className="text-black bg-green-300 py-4 px-10 rounded-lg" onClick={() => handleEditClick(midia.file_name)}>Editar</h3>
                                 <h3 className="text-black bg-red-300 py-4 px-24 rounded-lg cursor-pointer" onClick={() => handleDelete(midia.id)}>Excluir</h3>
                             </div> */}
-
-                        </div>
-                ))}
+          </div>
+        ))}
       </div>
 
       {showPopUp && <PopUpImage setShowPopUp={setShowPopUp} img={imagem} />}
