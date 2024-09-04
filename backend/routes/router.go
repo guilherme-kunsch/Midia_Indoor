@@ -17,10 +17,13 @@ func AddRoutes(e *echo.Echo) {
 		ExposeHeaders:    []string{"*"},
 		MaxAge:           86400,
 	}))
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
 	e.GET("/", controller.Healthchecker)
 	midia := e.Group("/midia")
 	{
 		midia.POST("/upload", controller.Upload)
+		midia.POST("/upload/html", controller.UploadHtmlContent)
 		midia.GET("/:id", controller.GetMidia)
 		midia.GET("", controller.GetMidias)
 		midia.DELETE("/:id", controller.DeleteMidia)
@@ -40,5 +43,9 @@ func AddRoutes(e *echo.Echo) {
 		device.GET("", controller.GetAllDevices)
 		device.PATCH("/:id", controller.UpdateDevice)
 		device.DELETE("/:id", controller.DeleteDevice)
+	}
+	play := e.Group("/play")
+	{
+		play.GET("/:id", controller.PlayContent)
 	}
 }

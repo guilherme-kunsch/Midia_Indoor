@@ -39,3 +39,26 @@ func Upload(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, midia)
 }
+
+func UploadHtmlContent(c echo.Context) error {
+	file, err := c.FormFile("file")
+	if err != nil {
+		return utils.ResponseError(c, http.StatusBadRequest, err.Error())
+	}
+	if file == nil {
+		return utils.ResponseError(c, http.StatusBadRequest, "Arquivo não pode ser nulo")
+	}
+	openedFile, err := file.Open()
+	if err != nil {
+		return utils.ResponseError(c, http.StatusBadRequest, err.Error())
+	}
+	fileHashName := utils.NewId()
+	fileExtension := filepath.Ext(file.Filename)
+	fileOldName := strings.Split(file.Filename, ".")[0]
+	fileName := slug.Make(fileOldName) + "_" + fileHashName + fileExtension
+	if err := service.UploadFile(fileName, openedFile); err != nil {
+		return utils.ResponseError(c, http.StatusBadRequest, err.Error())
+	}
+	url := "https://pi4.fly.storage.tigris.dev/" + fileName
+	return c.JSON(http.StatusOK, map[string]string{"location": url})
+}

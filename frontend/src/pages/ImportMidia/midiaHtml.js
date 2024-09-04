@@ -1,64 +1,99 @@
-import React, { useState } from "react";
-import SideBar from "../../components/SideBar";
+import { Editor } from '@tinymce/tinymce-react';
+import { useRef, useState } from 'react';
+import { toast, ToastContainer, Bounce } from 'react-toastify'
 import { useNavigate } from "react-router-dom";
-
+import 'react-toastify/dist/ReactToastify.css';
 export default function MidiaHtml() {
-  const [htmlContent, setHtmlContent] = useState("");
-  const navigate = useNavigate();
-
-  const enviarHtml = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("htmlContent", htmlContent);
-
-      await fetch("https://mastigadores.fly.dev/midia/uploadHtml", {
-        method: "POST",
-        body: formData,
-      });
-      console.log(formData);
-
-      alert("Mídia HTML salva com sucesso!");
-      navigate("/Gerenciamento");
-    } catch (error) {
-      alert(
-        "Erro ao realizar upload da Mídia HTML, se persiste contate os Mastigadores"
-      );
-      console.error("Erro: " + error.message);
+  const editorRef = useRef(null);
+  const [contentName, setContentName] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate()
+  const saveHtml = async () => {
+    if (!contentName.trim()) {
+      setErrorMessage('O nome do conteúdo não pode ser vazio');
+      return;
+    }
+    if (editorRef.current) {
+      const html = editorRef.current.getContent();
+      const blob = new Blob([html], { type: 'text/html' })
+      const formData = new FormData()
+      formData.append('file', blob, contentName + ".html")
+      try {
+        const response = await fetch('https://mastigadores.fly.dev/midia/upload', {
+          method: 'POST',
+          body: formData,
+        });
+        if (!response.ok) {
+          throw new Error('Erro ao enviar o arquivo');
+        }
+        toast.success('Conteudo salvo com sucesso');
+        navigate("/Gerenciamento")
+      } catch (error) {
+        console.error('Erro ao salvar o arquivo:', error);
+      }
+      setErrorMessage('');
     }
   };
 
   return (
-    <div className="w-full h-screen">
-      <SideBar title={"IMPORTAR MÍDIAS EM HTML"} />
-
-      <div className="w-full h-3/4 mt-24 flex flex-col items-center">
-        <div className="w-full h-1/2 p-2 flex justify-center">
-          <textarea
-            className="w-[100rem] h-full bg-white border-2 border-gray-400 rounded-lg p-4"
-            placeholder="Cole ou digite o código HTML aqui..."
-            value={htmlContent}
-            onChange={(e) => setHtmlContent(e.target.value)}
-          ></textarea>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick={true}
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable
+        pauseOnHover
+        theme="colored"
+        transition={Bounce}
+      />
+      <form className="w-full max-w-xl p-8 bg-white shadow-lg rounded-lg">
+        <div className="mb-6">
+          <input
+            type="text"
+            placeholder="Digite um nome para o conteúdo"
+            value={contentName}
+            onChange={(e) => setContentName(e.target.value)}
+            className="w-full p-4 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          {errorMessage && (
+            <p className="mt-2 text-sm text-red-600">{errorMessage}</p>
+          )}
         </div>
-
-        {htmlContent && (
-          <div className="w-full h-1/2 p-2 flex justify-center">
-            <div
-              className="w-[100rem] h-full bg-gray-100 border-2 border-gray-400 rounded-lg p-4 overflow-auto"
-              dangerouslySetInnerHTML={{ __html: htmlContent }}
-            />
-          </div>
-        )}
-      </div>
-
-      <div className="w-full justify-center text-center flex">
-        <button
-          className="bg-blue-500 text-white p-2 rounded-lg"
-          onClick={enviarHtml}
-        >
-          Enviar HTML
-        </button>
-      </div>
+        <div className="mb-6">
+          <Editor
+            apiKey="1hcpikelxgwpoyqhur6t63izha34o3jqn6286flhjhz78x5q"
+            onInit={(_, editor) => editorRef.current = editor}
+            init={{
+              language: "pt_BR",
+              contextmenu: false,
+              height: 500,
+              images_upload_url: `http://localhost:8080/midia/upload/html`,
+              menubar: true,
+              plugins:
+                "preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons accordion",
+              font_family_formats:
+                "Barlow,Inter,sans-serif; New Frank=new-frank,sans-serif",
+              font_size_formats: "8pt 10pt 12pt 14pt 16pt 18pt 24pt 36pt 48pt",
+              toolbar:
+                "undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl",
+              content_css: false
+            }}
+          />
+        </div>
+        <div className="flex justify-center">
+          <button
+            onClick={saveHtml}
+            type="button"
+            className="w-full py-3 text-lg font-semibold text-white bg-blue-500 rounded-lg hover:bg-blue-600"
+          >
+            Salvar
+          </button>
+        </div>
+      </form>
     </div>
   );
 }
