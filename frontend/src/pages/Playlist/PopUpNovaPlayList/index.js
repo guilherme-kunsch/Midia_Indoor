@@ -89,7 +89,7 @@ export default function PopUpNovaPlaylist({ setShowPopUp }) {
                 <div className="w-screen justify-center text-center flex">
                     <div className="w-9/12 h-3/4 bg-white rounded-lg shadow-md shadow-dark-blue">
                         <div className="justify-center text-center">
-                            <h2 className="text-ligth-white font-bold text-xl p-4 bg-dark-purple rounded-t-lg">CADASTRAR PLAYLIST</h2>
+                            <h2 className="text-white font-bold text-xl p-4 bg-dark-purple rounded-t-lg">CADASTRAR PLAYLIST</h2>
                         </div>
 
                         <form onSubmit={handleSubmit}>

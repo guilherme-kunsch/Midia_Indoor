@@ -6,7 +6,7 @@ export default function PlayContent() {
   const [midias, setMidias] = useState([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const getMidias = async (id) => {
-    const res = await fetch("http://localhost:8080/play/" + id)
+    const res = await fetch("https://mastigadores.fly.dev/play/" + id)
     if (res.status === 200) setMidias(await res.json())
     if (res.status !== 200) console.log(await res.json())
   }
