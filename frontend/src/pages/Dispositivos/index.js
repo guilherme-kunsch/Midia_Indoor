@@ -44,9 +44,26 @@ export default function Dispositivos() {
     setShowPopUp(true)
   };
 
-  const removerDispositivo = (index) => {
-    // const novosDispositivos = dispositivos.filter((_, i) => i !== index);
-    // setDispositivos(novosDispositivos);
+  const removerDispositivo = async (disp) => {
+    try {
+
+      const confirm = window.confirm("Tem certeza que deseja remover?")
+
+      if(!confirm){
+        return;
+      }
+      
+      await fetch(`https://mastigadores.fly.dev/device/${disp.id}`, {
+        method: "DELETE",
+      });
+
+      alert("Dispositivo removido com sucesso.")
+
+      window.location.reload()
+
+    } catch (error) {
+      
+    }
   };
 
   const gerenciarPlaylist = (dispositivo) => {
@@ -88,7 +105,7 @@ export default function Dispositivos() {
                   Salvar
                 </button>
                 <button
-                  onClick={() => removerDispositivo(index)}
+                  onClick={() => removerDispositivo(dispositivo)}
                   className="text-black bg-red-300 py-2 px-4 rounded-lg"
                 >
                   Excluir
