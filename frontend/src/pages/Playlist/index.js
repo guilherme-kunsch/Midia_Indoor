@@ -80,7 +80,7 @@ export default function Playlist(){
 
                         <div className="justify-center text-center flex bg-dark-blue p-4 rounded-t-lg">
                             <MdSettings size={20} color="White" onClick={() => editPlayList(play)}/>
-                            <h3 className="text-ligth-white w-full mr-6">{play.name}</h3>
+                            <h3 className="text-white w-full mr-6">{play.name}</h3>
                         </div>
                         <div className="w-full flex mt-0 p-0">
                             <div className="w-full h-70 bg-cards  px-10 rounded-b-lg">

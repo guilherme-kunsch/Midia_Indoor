@@ -71,7 +71,7 @@ export default function PopUpNewDisp({ setShowPopUp }) {
                 <div className="w-96 h-96 bg-white rounded-lg shadow-md shadow-dark-blue">
 
                     <div className="justify-center text-center">
-                        <h2 className="text-ligth-white font-bold text-xl p-4 bg-dark-purple rounded-t-lg">Novo Dispositivo</h2>
+                        <h2 className="text-white font-bold text-xl p-4 bg-dark-purple rounded-t-lg">Novo Dispositivo</h2>
                     </div>
 
                     <form onSubmit={handleSubmit}>
