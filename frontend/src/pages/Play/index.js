@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, } from "react"
 import { useParams } from "react-router-dom"
 
 export default function PlayContent() {
   const { deviceId } = useParams("deviceId")
   const [midias, setMidias] = useState([])
   const [currentIndex, setCurrentIndex] = useState(0)
-
   const getMidias = async (id) => {
     const res = await fetch("http://localhost:8080/play/" + id)
     if (res.status === 200) setMidias(await res.json())

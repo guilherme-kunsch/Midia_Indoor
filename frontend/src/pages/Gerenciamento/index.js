@@ -74,12 +74,12 @@ export default function Gerenciamento() {
         </div>
 
         <div className="justify-end m-4 text-center flex">
-          <h3
+          <button
             className="text-black text-sm bg-green-300 p-2 w-40 cursor-pointer mt-16 rounded-lg"
             onClick={() => navigate("/ImportarMidiasHtml")}
           >
             + Nova Mídia HTML
-          </h3>
+          </button>
         </div>
       </div>
 

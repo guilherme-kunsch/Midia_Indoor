@@ -7,6 +7,7 @@ import Playlist from "./pages/Playlist";
 import Gerenciamento from "./pages/Gerenciamento";
 import PlayContent from './pages/Play/index'
 import GerenciarSenhas from "./pages/GerenciarSenhas";
+import MidiaHtml from './pages/ImportMidia/midiaHtml'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './index.css'
 const container = document.getElementById('root');
@@ -38,8 +39,12 @@ const router = createBrowserRouter([
     element: <Midia/>
   },
   {
-      path: "/play/:deviceId",
+      path: "/Play/:deviceId",
       element: <PlayContent/>
+  },
+  {
+    path: "/ImportarMidiasHtml",
+    element: <MidiaHtml/>
   }
 ])
 
