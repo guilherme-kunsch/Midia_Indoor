@@ -40,7 +40,7 @@ export default function PopUpEditPlaylist({ setShowPopUpEdit, playlist }) {
                 name: titlePlayList,
                 midias: midiasPlayList
             }
-            console.log(playlist.id)
+            console.log(data)
             
             await fetch(`https://mastigadores.fly.dev/playlist/${playlist.id}`, {
                 method: "PATCH",
