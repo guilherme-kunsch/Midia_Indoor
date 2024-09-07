@@ -13,6 +13,7 @@ export default function App() {
   return (
     <HashRouter>
       <Routes>
+
         <Route exact path="/" element={<Home />} />
         <Fragment>
           <Route exact path="/GerenciarSenhas" element={<GerenciarSenhas />} />
