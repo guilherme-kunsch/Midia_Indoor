@@ -20,7 +20,7 @@ export default function Midia(){
         method: 'POST',
         body: formData,
       })
-      
+
       alert("Mídia salva com sucesso!")
       navigate('/Gerenciamento')
       
