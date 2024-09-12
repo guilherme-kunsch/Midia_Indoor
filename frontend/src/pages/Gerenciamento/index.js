@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import SideBar from "../../components/SideBar";
 import { useNavigate } from "react-router-dom";
 import PopUpImage from "./PopUpImage";
+import TextView from '../../components/TextView'
 // import PopUpEditMidia from "./PopUpEditMidia";
 
 import { TiDelete } from "react-icons/ti";
@@ -49,7 +50,6 @@ export default function Gerenciamento() {
         const response = await fetch("https://mastigadores.fly.dev/midia", {
           method: "GET",
         });
-        console.log("teste");
         const data = await response.json();
         setMidias(data);
       } catch (error) {
@@ -59,7 +59,31 @@ export default function Gerenciamento() {
 
     fetchData();
   }, []);
-
+  const renderMidia = (midia) => {
+    switch (midia.file_type) {
+      case "image":
+        return (
+          <img
+            className="max-h-60"
+            src={midia.file_url}
+            alt="logo"
+            onClick={() => handleImagemClick(midia.file_url)}
+          />
+        )
+      case "video":
+        return (
+          <video className="max-h-60" controls>
+          <source src={midia.file_url} type="video/mp4" />
+        </video>
+        )
+      case "text": 
+          return (
+          <div className="max-h-60"><TextView id={midia.id}/></div>
+        )
+      default:
+        return (<></>)
+    }
+  }
   return (
     <div className="w-full">
       <SideBar title={"GERENCIAMENTO"} />
@@ -84,7 +108,7 @@ export default function Gerenciamento() {
       </div>
 
       <div className="pl-40 w-full grid grid-cols-2">
-        {midias.map((midia, index) => (
+        {midias && midias.map((midia, index) => (
           <div key={index} className="w-9/12 h-70 mb-9 bg-gray-200  rounded-lg">
             <div className="justify-center text-center flex bg-dark-blue p-4 rounded-t-lg">
               <TiDelete
@@ -99,18 +123,7 @@ export default function Gerenciamento() {
             </div>
 
             <div className="h-60 justify-center flex text-center m-auto items-center">
-              {midia.file_name.split(".")[1] === "mp4" ? (
-                <video className="max-h-60" controls>
-                  <source src={midia.file_url} type="video/mp4" />
-                </video>
-              ) : (
-                <img
-                  className="max-h-60"
-                  src={midia.file_url}
-                  alt="logo"
-                  onClick={() => handleImagemClick(midia.file_url)}
-                />
-              )}
+             {renderMidia(midia)}
             </div>
 
             {/* <div className="justify-center items-center flex mt-8">

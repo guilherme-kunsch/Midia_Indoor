@@ -20,6 +20,7 @@ func AddRoutes(e *echo.Echo) {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.GET("/", controller.Healthchecker)
+	e.GET("/html/:id", controller.GetHtmlContent)
 	midia := e.Group("/midia")
 	{
 		midia.POST("/upload", controller.Upload)
