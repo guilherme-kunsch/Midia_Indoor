@@ -12,7 +12,7 @@ export default function Home() {
 
             <div
                 className="text-center bg-cover bg-center flex flex-col items-center justify-center h-full"
-                style={{ backgroundImage: `url(${logo})`, height: '100vh' }}
+                style={{ backgroundImage: `url(${logo})`, height: '100vh', backgroundPosition: 'center', backgroundSize: 'cover' }}
             >
                 <div className="bg-black bg-opacity-50 p-4 rounded-md shadow-lg">
                     <h1 className='text-white text-4xl font-bold'>MASTIGADORES</h1>
