@@ -1,21 +1,20 @@
-import { useEffect, useState } from "react";
-
+import api from "../../api/api";
+import { useQuery } from "@tanstack/react-query";
+import { Parser } from "html-to-react";
 export default function TextView({id}) {
-  const [textContent, setTextContent] = useState(0)
-  useEffect(() => {
-    const fetchText = async () => {
-      const response = await fetch("https://mastigadores.fly.dev/html/" + id)
-      if(!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const text = await response.text()
-      setTextContent(text);
+  const parser= Parser()
+  const fetchText = async (id) =>  {
+    const response = await api.get("/html/" + id)
+    if(response.status === 200) {
+      const data = response.data
+      return data 
     }
-    fetchText()
-  }, [id])
+  }
+  const {data} = useQuery({queryKey: ["text-" + id], queryFn: () => fetchText(id)})
+  
   return (
-    <div className="text-viewer">
-      <div dangerouslySetInnerHTML={{__html: textContent}}></div>
+    <div >
+      {parser.parse(data)}
     </div>
   )
 }

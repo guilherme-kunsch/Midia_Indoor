@@ -13,17 +13,17 @@ import (
 
 var playlistCollection *mongo.Collection = database.GetCollection(database.MongoDB, "playlist")
 
-func validateMidia(midias []models.Content) error {
-	for _, midia := range midias {
-		err := midiaCollection.FindOne(context.Background(), bson.M{"_id": midia.MidiaID}).Err()
+func validateMidia(midias []string) error {
+	for _, id := range midias {
+		err := midiaCollection.FindOne(context.Background(), bson.M{"_id": id}).Err()
 		if err == mongo.ErrNoDocuments {
-			return fmt.Errorf("Midia com id -> '%s' não encontrada", midia.MidiaID)
+			return fmt.Errorf("Midia com id -> '%s' não encontrada", id)
 		}
 	}
 	return nil
 }
 func CreatePlaylist(playlist models.Playlist) (models.Playlist, error) {
-	err := validateMidia(playlist.Midias)
+	err := validateMidia(playlist.MidiasId)
 	if err != nil {
 		return models.Playlist{}, err
 	}
@@ -40,7 +40,17 @@ func GetPlaylist(id string) (playlist models.Playlist, err error) {
 }
 
 func GetPlaylists() ([]models.Playlist, error) {
-	cursor, err := playlistCollection.Find(context.Background(), bson.M{})
+  pipeline := []bson.M{
+    {
+      "$lookup": bson.M{
+          "from": "midias",
+          "localField": "midias_id",
+          "foreignField": "_id",
+          "as": "midias",
+      },
+    },
+  }
+	cursor, err := playlistCollection.Aggregate(context.Background(), pipeline)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +60,7 @@ func GetPlaylists() ([]models.Playlist, error) {
 }
 
 func UpdatePlaylist(id string, playlist models.Playlist) (models.Playlist, error) {
-	err := validateMidia(playlist.Midias)
+	err := validateMidia(playlist.MidiasId)
 	if err != nil {
 		return models.Playlist{}, err
 	}

@@ -1,7 +1,7 @@
 import React from "react";
 import SideBar from '../../components/SideBar'
 import { useNavigate } from "react-router-dom";
-
+import api from "../../api/api";
 
 export default function Midia(){
 
@@ -15,14 +15,11 @@ export default function Midia(){
       const formData = new FormData()
       
       formData.append('file', file)
-      
-      await fetch("https://mastigadores.fly.dev/midia/upload", {
-        method: 'POST',
-        body: formData,
-      })
-
-      alert("Mídia salva com sucesso!")
-      navigate('/Gerenciamento')
+      const response = await api.post("/midia/upload", formData)
+      if(response.status === 200) {
+        alert("Mídia salva com sucesso!")
+        navigate('/Gerenciamento')
+      }
       
     }catch(error){
       alert("Erro ao realizar upload da Mídia, se persiste contate os Mastigadores")

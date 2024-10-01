@@ -6,6 +6,7 @@ import TextView from '../../components/TextView'
 // import PopUpEditMidia from "./PopUpEditMidia";
 
 import { TiDelete } from "react-icons/ti";
+import api from "../../api/api";
 
 export default function Gerenciamento() {
   const [showPopUp, setShowPopUp] = useState(false);
@@ -23,11 +24,6 @@ export default function Gerenciamento() {
     setShowPopUp(true);
   };
 
-  // const handleEditClick = (midia) => {
-  //   setMidiaTitle(midia);
-  //   setShowPopUpEdit(true);
-  // };
-
   const handleDelete = async (id) => {
     const confirm = window.confirm(
       "Tem certeza que deseja remover essa mídia?"
@@ -36,27 +32,18 @@ export default function Gerenciamento() {
     if (!confirm) {
       return;
     }
+    const response = await api.delete(`/midia/${id}`)
+    if(response.status === 200) {
+      window.location.reload();
+    }
 
-    await fetch(`https://mastigadores.fly.dev/midia/${id}`, {
-      method: "DELETE",
-    });
-
-    window.location.reload();
   };
+  const fetchData = async () => {
+    const response = await api.get('/midia')
+    setMidias(response.data)
+}
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("https://mastigadores.fly.dev/midia", {
-          method: "GET",
-        });
-        const data = await response.json();
-        setMidias(data);
-      } catch (error) {
-        console.error("Erro ao buscar dados:", error);
-      }
-    };
-
     fetchData();
   }, []);
   const renderMidia = (midia) => {
@@ -78,7 +65,7 @@ export default function Gerenciamento() {
         )
       case "text": 
           return (
-          <div className="max-h-60"><TextView id={midia.id}/></div>
+          <div className="max-h-60 text-black"><TextView id={midia.id}/></div>
         )
       default:
         return (<></>)
