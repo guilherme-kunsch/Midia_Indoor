@@ -1,43 +1,52 @@
 import React, { useEffect, useState } from "react";
 import Popup from "reactjs-popup";
 import api from "../../../api/api";
-export default function PopUpNewDisp({ setShowPopUp }) {
+export default function EditDeviceModal({ closeEditDeviceModal, device }) {
 
     const [ playlists, setPlaylists ] = useState([])
 
-    const [ playlistDisp, setPlaylistDisp ] = useState('')
+    const [ playlistDisp, setPlaylistDisp ] = useState(null)
+    const [playListId, setPlayListId] = useState("")
+    const [ nomeDisp, setNomeDisp ] = useState(device.name)
+    const fetchData = async () => {
+        try {
+        
+          const response = await api.get(`/playlist`);
+          const data = response.data;
+          setPlaylists(data);
 
-    const [ nomeDisp, setNomeDisp ] = useState('')
-
+        } catch (error) {
+          console.error("Erro ao buscar dados:", error);
+        }
+      };
+  
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-            
-              const response = await api.get("/playlist");
-              const data = response.data;
-              setPlaylists(data);
-
-            } catch (error) {
-              console.error("Erro ao buscar dados:", error);
-            }
-          };
-      
           fetchData();
     }, [])
-
+    const fetchPlaylist = async (id) => {
+        const response = await api.get(`/playlist/${id}`)
+        if(response.status === 200) {
+            const data = response.data
+            setPlaylistDisp(data)
+        }
+    }
+    useEffect(() => {
+        if(device.playlist_id) {
+            fetchPlaylist(device.playlist_id)
+        }
+    }, [device])
     const Save = async () => {
-
         try{
             
             const data = {
                 name: nomeDisp,
-                playlist_id: playlistDisp
+                playlist_id: playListId
             }
             
-            const response = await api.post("/device", data);
+            const response = await api.patch(`/device/${device.id}`, data);
             if(response.status === 200) {
-                alert('Dispositivo salvo com sucesso.')
+                alert('Dispositivo atualizado com sucesso.')
                 window.location.reload()
             }
 
@@ -48,7 +57,7 @@ export default function PopUpNewDisp({ setShowPopUp }) {
     }
 
     const closeModal = () => {
-        setShowPopUp(false);
+        closeEditDeviceModal();
     };
 
     const handleSubmit = (event) => {
@@ -59,13 +68,13 @@ export default function PopUpNewDisp({ setShowPopUp }) {
     return (
         
         <div className="fixed inset-0 z-50 flex items-center justify-center ">
-            <div className="absolute inset-0 bg-black opacity-30"></div> {/* Fundo escuro semi-transparente */}
+            <div className="absolute inset-0 bg-black opacity-30"></div>
 
             <Popup open={true} onClose={closeModal} modal nested>
                 <div className="w-96 h-96 bg-white rounded-lg shadow-md shadow-dark-blue">
 
                     <div className="justify-center text-center">
-                        <h2 className="text-white font-bold text-xl p-4 bg-dark-purple rounded-t-lg">Novo Dispositivo</h2>
+                        <h2 className="text-white font-bold text-xl p-4 bg-dark-purple rounded-t-lg">Editar Dispositivo</h2>
                     </div>
 
                     <form onSubmit={handleSubmit}>
@@ -83,11 +92,11 @@ export default function PopUpNewDisp({ setShowPopUp }) {
                             <label className="block text-black my-2">Playlist:</label>
                             <select 
                                 className="w-full px-3 py-2 border rounded-lg text-black" 
-                                onChange={(e) => setPlaylistDisp(e.target.value)}
+                                onChange={(e) => setPlayListId(e.target.value)}
                             >
-                                <option value="">Nenhuma</option>
-                                {playlists.map((play, index) => (
-                                    <option value={play.id}>{play.name}</option>
+                             (<option value="">Nenhuma</option>)
+                                {playlists && playlists.map((play, index) => (
+                                    <option key={index} value={play.id} selected={playlistDisp && play.name === playlistDisp.name}>{play.name}</option>
                                 ))}
                             </select>
                         </div>

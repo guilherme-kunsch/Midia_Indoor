@@ -1,35 +1,31 @@
 import React, { useEffect, useState } from "react";
 import SideBar from "../../components/SideBar";
 import PopUpNewDisp from "./PopUpNewDisp";
-
+import api from '../../api/api'
+import EditDeviceModal from "./PopUpEditDisp";
 export default function Dispositivos() {
 
-  const [showPopUp, setShowPopUp] = useState(false);
-
+  const [newDevideModal, setNewDeviceModal] = useState(false);
+  const [device, setDevice] = useState(null)
+  const [editDeviceModal, setEditDeviceModal] = useState(false)
   const [ dispositivos, setDispositivos ] = useState([]);
-  const [ playlists, setPlaylists ] = useState([]);
 
+  const openEditDeviceModal = (device) => {
+    setDevice(device)
+    setEditDeviceModal(true)
+  }
+  const closeEditDeviceModal = () => {
+    setEditDeviceModal(false)
+    setDevice(null)
+  }
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("https://mastigadores.fly.dev/device", {
-          method: "GET",
-        });
-
-        const data = await response.json();
-
-        const dataAtu = await Promise.all(
-          data.map(async (disp) => {
-            const response = await fetch(`https://mastigadores.fly.dev/playlist/${disp.playlist_id}`, {
-              method: "GET",
-            });
-            const playlist = await response.json();
-        
-            return { ...disp, playlist_name: playlist.name };
-          })
-        );
-
-        setDispositivos(dataAtu);
+        const response = await api.get("/device")
+        if(response.status === 200) {
+          const data = response.data;
+          setDispositivos(data);
+        }
 
       } catch (error) {
         console.error("Erro ao buscar dados:", error);
@@ -41,7 +37,7 @@ export default function Dispositivos() {
   }, []);
 
   const adicionarDispositivo = () => {
-    setShowPopUp(true)
+    setNewDeviceModal(true)
   };
 
   const removerDispositivo = async (disp) => {
@@ -53,21 +49,14 @@ export default function Dispositivos() {
         return;
       }
       
-      await fetch(`https://mastigadores.fly.dev/device/${disp.id}`, {
-        method: "DELETE",
-      });
-
-      alert("Dispositivo removido com sucesso.")
-
-      window.location.reload()
-
+      const response = await api.delete(`/device/${disp.id}`);
+      if(response.status === 200) {
+        alert("Dispositivo removido com sucesso.")
+        window.location.reload()
+      } 
     } catch (error) {
       
     }
-  };
-
-  const gerenciarPlaylist = (dispositivo) => {
-    alert(`Gerenciar playlist de ${dispositivo}`);
   };
 
   return (
@@ -85,7 +74,7 @@ export default function Dispositivos() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {dispositivos.map((dispositivo, index) => (
+          {dispositivos && dispositivos.map((dispositivo, index) => (
             <div
               key={index}
               className="bg-gray-200 rounded-lg flex flex-col items-center space-y-4"
@@ -99,10 +88,10 @@ export default function Dispositivos() {
 
               <div className="flex space-x-4 pb-4">
                 <button
-                  onClick={() => gerenciarPlaylist(dispositivo)}
+                  onClick={() => openEditDeviceModal(dispositivo)}
                   className="text-black bg-green-300 py-2 px-4 rounded-lg"
                 >
-                  Salvar
+                  Editar
                 </button>
                 <button
                   onClick={() => removerDispositivo(dispositivo)}
@@ -115,11 +104,13 @@ export default function Dispositivos() {
           ))}
         </div>
 
-        {showPopUp && (
+        {newDevideModal && (
           <PopUpNewDisp
-          setShowPopUp={setShowPopUp}
+          setShowPopUp={setNewDeviceModal}
           />
         )}
+
+        {editDeviceModal && <EditDeviceModal closeEditDeviceModal={closeEditDeviceModal} device={device}/>}
       </div>
     </div>
   );
