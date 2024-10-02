@@ -6,8 +6,9 @@ import PopUpEditPlaylist from "./PopUpEditPlayList";
 
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-
-export default function Playlist(){
+import api from "../../api/api";
+import TextView from "../../components/TextView";
+export default function Playlist() {
 
     const [showPopUp, setShowPopUp] = useState(false);
     const [showPopUpEdit, setShowPopUpEdit] = useState(false);
@@ -15,41 +16,30 @@ export default function Playlist(){
 
     const responsive = {
         superLargeDesktop: {
-          // the naming can be any, depends on you.
-          breakpoint: { max: 4000, min: 3000 },
-          items: 1
+            breakpoint: { max: 4000, min: 3000 },
+            items: 1
         },
         desktop: {
-          breakpoint: { max: 3000, min: 1024 },
-          items: 1
+            breakpoint: { max: 3000, min: 1024 },
+            items: 1
         },
         tablet: {
-          breakpoint: { max: 1024, min: 464 },
-          items: 1
+            breakpoint: { max: 1024, min: 464 },
+            items: 1
         },
         mobile: {
-          breakpoint: { max: 464, min: 0 },
-          items: 1
+            breakpoint: { max: 464, min: 0 },
+            items: 1
         }
-      };
+    };
 
-    const [ playlists, setPlaylists ] = useState([])
-
+    const [playlists, setPlaylists] = useState([])
+    const fetchData = async () => {
+        const response = await api.get("/playlist")
+        if(response.status === 200) setPlaylists(response.data)
+    }
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-              const response = await fetch("https://mastigadores.fly.dev/playlist", {
-                method: "GET",
-              });
-              const data = await response.json();
-              console.log(data)
-              setPlaylists(data);
-            } catch (error) {
-              console.error("Erro ao buscar dados:", error);
-            }
-          };
-      
-          fetchData();
+        fetchData();
     }, [])
 
     const handleNewPlaylistClick = () => {
@@ -60,7 +50,11 @@ export default function Playlist(){
         setSelectedPlaylist(playlist);
         setShowPopUpEdit(true);
     };
-
+    if(!playlists) {
+        return (
+            <div>Carregando...</div>
+        )
+    }
     return (
         <div className="w-full">
             <SideBar
@@ -70,22 +64,23 @@ export default function Playlist(){
 
 
             <div className="justify-end m-4 text-center flex">
-                <h3 className="text-black text-sm bg-green-300 p-2 w-40 mt-16 rounded-lg cursor-pointer"  onClick={handleNewPlaylistClick}>+ Nova Playlist</h3>
+                <h3 className="text-black text-sm bg-green-300 p-2 w-40 mt-16 rounded-lg cursor-pointer" onClick={handleNewPlaylistClick}>+ Nova Playlist</h3>
             </div>
-            
-            <div className="px-64 mt-4 w-full grid grid-cols-2">
-                {playlists.map((play, index) => (
 
-                    <div key={index} className="mb-12 px-4 justify-center text-center">                        
+            <div className="px-64 mt-4 w-full grid grid-cols-2">
+                {playlists && playlists.map((play, index) => (
+
+                    <div key={index} className="mb-12 px-4 justify-center text-center">
 
                         <div className="justify-center text-center flex bg-dark-blue p-4 rounded-t-lg">
-                            <MdSettings size={20} color="White" onClick={() => editPlayList(play)}/>
+                            <button><MdSettings size={20} color="White" onClick={() => editPlayList(play)} /></button>
+
                             <h3 className="text-white w-full mr-6">{play.name}</h3>
                         </div>
                         <div className="w-full flex mt-0 p-0">
                             <div className="w-full h-70 bg-cards  px-10 rounded-b-lg">
 
-                                <Carousel 
+                                <Carousel
                                     responsive={responsive}
                                     swipeable={true}
                                     draggable={true}
@@ -100,21 +95,26 @@ export default function Playlist(){
                                     removeArrowOnDeviceType={["tablet", "mobile"]}
                                     dotListClass="custom-dot-list-style"
                                     itemClass="carousel-item-padding-40-px"
-                                    >
-                                        {play.midias.map((midia, midiaIndex) => (
+                                >
+                                    {play.midias ? play.midias.map((midia, midiaIndex) => {
+                                        return (
                                             // <h3 key={midiaIndex} className="text-black bg-flash-white py-4 my-4 rounded-lg">{midia.file_name}</h3>
                                             <div key={midiaIndex} className="w-full flex justify-center text-center my-6">
-                                                {midia.file_name.split('.')[1] === 'mp4' ? 
-                                                    <video className="max-h-60" controls><source src={`https://pi4.fly.storage.tigris.dev/${midia.file_name}`} type="video/mp4"/></video> : 
-                                                    <img className="max-h-60" src={`https://pi4.fly.storage.tigris.dev/${midia.file_name}`} alt="logo"/>
-                                                }
+                                                {midia && midia.file_type === "image" && (
+                                                    <img src={midia.file_url} alt={midia.file_name} className="max-w-full h-auto" />
+                                                )}
+                                                {midia && midia.file_type === "video" && (
+                                                    <video src={midia.file_url} controls className="max-w-full h-auto" />
+                                                )}
+                                                {midia && midia.file_type === "text" && (
+                                                    <div className="max-w-full h-auto text-black"> <TextView id={midia.id} /> </div>
+                                                )}
                                             </div>
-                                        ))}
+                                        )
+                                    }
+                                    ) : <div />}
                                 </Carousel>
-                                {/* {play.midias.map((midia, midiaIndex) => (
-                                    <h3 key={midiaIndex} className="text-black bg-flash-white py-4 my-4 rounded-lg">{midia.file_name}</h3>
-                                ))} */}
-                            </div>                    
+                            </div>
                         </div>
 
                     </div>
@@ -122,10 +122,10 @@ export default function Playlist(){
                 ))}
             </div>
 
-            {showPopUp && <PopUpNovaPlaylist setShowPopUp={setShowPopUp}/>}
+            {showPopUp && <PopUpNovaPlaylist setShowPopUp={setShowPopUp} />}
 
             {showPopUpEdit && (
-                <PopUpEditPlaylist 
+                <PopUpEditPlaylist
                     setShowPopUpEdit={setShowPopUpEdit}
                     playlist={selectedPlaylist} // Passa a playlist selecionada para o popup
                 />

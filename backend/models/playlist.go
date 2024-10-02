@@ -6,7 +6,8 @@ type (
 	Playlist struct {
 		ID        string    `json:"id" bson:"_id"`
 		Name      string    `json:"name" bson:"name"`
-		Midias    []Content `json:"midias" bson:"midias"`
+		MidiasId    []string `json:"midias_id" bson:"midias_id"`
+    Midias []Midia `json:"midias" bson:"midias,omitempty"`
 		CreatedAt time.Time `json:"created_at" bson:"created_at"`
 		UpdatedAt time.Time `json:"updated_at" bson:"updated_at"`
 	}

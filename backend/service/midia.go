@@ -11,7 +11,7 @@ import (
 )
 
 var midiaCollection *mongo.Collection = database.GetCollection(database.MongoDB, "midias")
-
+ 
 func SaveMidia(midia models.Midia) (models.Midia, error) {
 	midia.CreatedAt = time.Now()
 	midia.UpdatedAt = time.Now()
@@ -35,5 +35,10 @@ func GetMidias() ([]models.Midia, error) {
 }
 
 func DeleteMidia(id string) error {
-	return midiaCollection.FindOneAndDelete(context.Background(), bson.M{"_id": id}).Err()
+  filter := bson.M{"$pull": bson.M{"midias_id": id}}
+  _, err := playlistCollection.UpdateMany(context.Background(), bson.M{}, filter)
+  if err != nil {
+    return err
+  }
+  return midiaCollection.FindOneAndDelete(context.Background(), bson.M{"_id": id}).Err()
 }

@@ -16,11 +16,15 @@ import (
 var MongoDB *mongo.Client = NewMongoDB()
 
 func NewMongoDB() *mongo.Client {
-	err := godotenv.Load()
-	if err != nil {
-		fmt.Println("Error loading .env file but don't worry, we are using the environment variables.")
+	if os.Getenv("ENV") == "dev" {
+		err := godotenv.Load()
+
+		if err != nil {
+			fmt.Println("Error loading .env file but don't worry, we are using the environment variables.")
+		}
 	}
 	mongoUri := os.Getenv("MONGODB_URI")
+	fmt.Println(mongoUri)
 	ctx, cancelRetry := context.WithTimeout(context.Background(), 10*time.Second)
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoUri))
 	if err != nil {
