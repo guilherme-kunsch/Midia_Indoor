@@ -50,11 +50,7 @@ export default function Playlist() {
         setSelectedPlaylist(playlist);
         setShowPopUpEdit(true);
     };
-    if(!playlists) {
-        return (
-            <div>Carregando...</div>
-        )
-    }
+    
     return (
         <div className="w-full">
             <SideBar
