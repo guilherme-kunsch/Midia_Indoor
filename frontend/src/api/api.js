@@ -4,6 +4,7 @@ let API_URL = 'http://localhost:8080'
 if(process.env.ENV === "prod") {
     API_URL = process.env.API_URL
 }
+console.log(process.env.ENV, API_URL)
 class API {
     async request(url, method, data = {}, config = {}) {
         const methodLower = method.toLowerCase()
