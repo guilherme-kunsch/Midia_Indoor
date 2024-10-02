@@ -1,16 +1,17 @@
 import axios from "axios"
 
-let API_URL = 'http://localhost:8080'
-if(process.env.ENV === "prod") {
-    API_URL = process.env.API_URL
+let REACT_APP_API_URL = 'http://localhost:8080'
+if(process.env.REACT_APP_ENV === "prod") {
+    REACT_APP_API_URL = process.env.REACT_APP_API_URL
 }
+console.log(process.env.REACT_APP_ENV, REACT_APP_API_URL)
 class API {
     async request(url, method, data = {}, config = {}) {
         const methodLower = method.toLowerCase()
         try {
             return await axios(
                 {
-                    url: `${API_URL}${url}`,
+                    url: `${REACT_APP_API_URL}${url}`,
                     method: methodLower,
                     data,
                     ...config
