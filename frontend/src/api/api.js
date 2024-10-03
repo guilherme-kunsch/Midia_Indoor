@@ -1,9 +1,10 @@
 import axios from "axios"
 
-let REACT_APP_API_URL = 'http://localhost:8080'
-if(process.env.REACT_APP_ENV === "prod") {
-    REACT_APP_API_URL = process.env.REACT_APP_API_URL
-}
+// let REACT_APP_API_URL = 'http://localhost:8080'
+// if(process.env.REACT_APP_ENV === "prod") {
+//     REACT_APP_API_URL = process.env.REACT_APP_API_URL
+// }
+let REACT_APP_API_URL = 'https://mastigadores-api.onrender.com'
 console.log(process.env.REACT_APP_ENV, REACT_APP_API_URL)
 class API {
     async request(url, method, data = {}, config = {}) {
@@ -17,7 +18,7 @@ class API {
                     ...config
                 }
             )
-        }catch(err) {
+        } catch (err) {
             return err.response
         }
     }
@@ -26,10 +27,10 @@ class API {
     }
 
     async post(url, data = {}, config = {}) {
-        return await this.request(url, 'POST', data, config) 
+        return await this.request(url, 'POST', data, config)
     }
     async patch(url, data = {}, config = {}) {
-        return await this.request(url, 'PATCH', data, config) 
+        return await this.request(url, 'PATCH', data, config)
     }
 
     async delete(url) {

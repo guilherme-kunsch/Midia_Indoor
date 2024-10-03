@@ -5,11 +5,11 @@ import Preview from "../../../components/Preview";
 import api from "../../../api/api";
 
 export default function PopUpEditPlaylist({ setShowPopUpEdit, playlist }) {
-    const [ titlePlayList, setTitlePlaylist ] = useState(playlist.name)
+    const [titlePlayList, setTitlePlaylist] = useState(playlist.name)
     const [previewModal, setPreviewModal] = useState(false)
     const [selectedPreviewMidia, setSelectedPreviewMidia] = useState(null)
     const [selectedMidia, setSelectedMidia] = useState([])
-    const [ midias, setMidias ] = useState([])
+    const [midias, setMidias] = useState([])
 
     const closeModal = () => {
         setShowPopUpEdit(false);
@@ -29,36 +29,36 @@ export default function PopUpEditPlaylist({ setShowPopUpEdit, playlist }) {
 
     const savePlay = async () => {
 
-        try{
+        try {
             const midiasId = selectedMidia.map(midia => midia.id)
             const data = {
                 name: titlePlayList,
                 midias_id: midiasId
             }
             const response = await api.patch(`/playlist/${playlist.id}`, data)
-            if(response.status === 200) {
+            if (response.status === 200) {
                 alert("PlayList atualizada com sucesso!")
                 window.location.reload()
             }
 
 
-        }catch(error){
+        } catch (error) {
             alert('Erro ao cadastrar playlist, procure os mastigadores.')
             console.error(error.message)
         }
     }
     const fetchData = async () => {
         const response = await api.get("/midia")
-        if(response.status === 200) {
+        if (response.status === 200) {
             const midias = response.data
-            if(midias) {
+            if (midias) {
                 const notIncludedMedias = midias.filter(midia => !playlist.midias_id.includes(midia.id))
                 const selected = midias.filter(midia => playlist.midias_id.includes(midia.id))
                 setSelectedMidia(selected)
                 setMidias(notIncludedMedias)
             }
         }
-        
+
     }
     const removeMedia = (media) => {
         setMidias(state => [...state, media])
@@ -66,17 +66,17 @@ export default function PopUpEditPlaylist({ setShowPopUpEdit, playlist }) {
     }
     const deletePlaylist = async () => {
         const response = await api.delete(`/playlist/${playlist.id}`)
-        if(response.status === 204) {
+        if (response.status === 204) {
             alert("PlayList deletada com sucesso!")
             window.location.reload()
         }
     }
-    useEffect(() => {      
-          fetchData();
+    useEffect(() => {
+        fetchData();
 
     }, [playlist.midias_id])
     return (
-        
+
         <div className="fixed inset-0 z-50 flex items-center justify-center w-screen">
             <div className="absolute inset-0 bg-black opacity-30"></div>
 
@@ -98,16 +98,18 @@ export default function PopUpEditPlaylist({ setShowPopUpEdit, playlist }) {
                                         <h3 className="text-black">Mídias</h3>
                                         <div className="bg-white text-black h-72 border border-dark-blue pb-24 overflow-scroll">
                                             {midias.map((midia, index) => (
-                                                <div 
-                                                    key={index} 
-                                                    className="flex text-start my-2 py-1 px-2 hover:bg-dark-blue hover:text-white rounded-lg justify-between" 
+                                                <div
+                                                    key={index}
+                                                    className="flex text-start my-2 py-1 px-2 hover:bg-dark-blue hover:text-white rounded-lg justify-between"
                                                 >
                                                     <span className="text-sm">{midia.file_name}</span>
-                                                    <button className="text-sm w-20 bg-blue-500 rounded-lg" type="button" onClick={() => openPreviewModal(midia)}>Preview</button>
-                                                    <button className="text-sm w-20 bg-green-500 rounded-lg" type="button" onClick={() => {
-                                                                 setSelectedMidia(state => [...state, midia])
-                                                                 setMidias(midias.filter(m => m.id != midia.id))
-                                                    }}>Selecionar</button>
+                                                    <div className="">
+                                                        <button className="text-sm w-20 bg-blue-500 rounded-lg" type="button" onClick={() => openPreviewModal(midia)}>Preview</button>
+                                                        <button className="text-sm w-20 bg-green-500 rounded-lg" type="button" onClick={() => {
+                                                            setSelectedMidia(state => [...state, midia])
+                                                            setMidias(midias.filter(m => m.id != midia.id))
+                                                        }}>Selecionar</button>
+                                                    </div>
                                                 </div>
                                             ))}
                                         </div>
@@ -127,13 +129,13 @@ export default function PopUpEditPlaylist({ setShowPopUpEdit, playlist }) {
                                         <h3 className="text-black">Selecionadas</h3>
                                         <div className="bg-white text-black h-72 border border-dark-blue pb-24 overflow-scroll">
                                             {selectedMidia.map((midia, index) => (
-                                                <div 
-                                                    key={index} 
+                                                <div
+                                                    key={index}
                                                     className="flex text-start my-2 py-1 px-2 hover:bg-dark-blue hover:text-white rounded-lg justify-between"
                                                 >
                                                     <span className="text-sm">{midia.file_name}</span>
                                                     <button type="button" className="text-sm w-20 rounded-lg bg-red-500" onClick={() => removeMedia(midia)}>Remover</button>
-                                                </div> 
+                                                </div>
                                             ))}
                                         </div>
                                     </div>
@@ -157,7 +159,7 @@ export default function PopUpEditPlaylist({ setShowPopUpEdit, playlist }) {
                     </div>
 
                 </div>
-            {previewModal && <Preview midia={selectedPreviewMidia} closePreviewModal={closePreviewModal}/>}
+                {previewModal && <Preview midia={selectedPreviewMidia} closePreviewModal={closePreviewModal} />}
             </Popup>
 
         </div>
