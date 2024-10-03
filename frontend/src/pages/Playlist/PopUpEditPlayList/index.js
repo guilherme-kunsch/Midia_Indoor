@@ -115,6 +115,7 @@ export default function PopUpEditPlaylist({ setShowPopUpEdit, playlist }) {
                                         </div>
                                     </div>
 
+
                                     <div className="grid text-white my-24 px-4">
                                         {/* <FaAnglesLeft 
                                             className="rounded-full bg-dark-purple w-5 h-5 p-0.5 cursor-pointer"
