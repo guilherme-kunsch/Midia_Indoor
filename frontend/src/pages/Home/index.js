@@ -9,7 +9,6 @@ export default function Home() {
             <SideBar
                 title={'HOME'}
             />
-
             <div
                 className="text-center bg-cover bg-center flex flex-col items-center justify-center"
                 style={{ backgroundImage: `url(${logo})`, height: '100vh', backgroundSize: 'cover' }}
