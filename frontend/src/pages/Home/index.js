@@ -8,11 +8,10 @@ export default function Home() {
         <div className="w-full">
             <SideBar
                 title={'HOME'}
-            />              
-
-            <div 
-                className="text-center bg-cover bg-center flex flex-col items-center justify-center mt-16"
-                style={{ backgroundImage: `url(${logo})`, height: '90vh' }}
+            />
+            <div
+                className="text-center bg-cover bg-center flex flex-col items-center justify-center"
+                style={{ backgroundImage: `url(${logo})`, height: '100vh', backgroundSize: 'cover' }}
             >
                 <div className="bg-black bg-opacity-50 p-4 rounded-md shadow-lg">
                     <h1 className='text-white text-4xl font-bold'>MASTIGADORES</h1>
