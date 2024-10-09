@@ -11,10 +11,9 @@ export default function Home() {
             />
 
             <div
-                className="text-center bg-cover bg-center flex flex-col items-center justify-center  w-full h-[calc(100vh)]"
-                style={{ backgroundImage: `url(${logo})` }}
+                className="text-center bg-cover bg-center flex flex-col items-center justify-center"
+                style={{ backgroundImage: `url(${logo})`, height: '100vh', backgroundSize: 'cover' }}
             >
-
                 <div className="bg-black bg-opacity-50 p-4 rounded-md shadow-lg">
                     <h1 className='text-white text-4xl font-bold'>MASTIGADORES</h1>
                     <h1 className='text-white text-4xl font-bold'>UCL 2024</h1>
