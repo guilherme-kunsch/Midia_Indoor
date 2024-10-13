@@ -11,6 +11,6 @@ type (
 		FileType         string    `json:"file_type" bson:"file_type"`
 		CreatedAt        time.Time `json:"created_at" bson:"created_at"`
 		UpdatedAt        time.Time `json:"updated_at" bson:"updated_at"`
-		Duration         int       `json:"duration" bson:"duration"`
+		Duracion         int       `json:"duration" bson:"duration"`
 	}
 )
