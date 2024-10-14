@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
-
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -16,13 +15,7 @@ import (
 var MongoDB *mongo.Client = NewMongoDB()
 
 func NewMongoDB() *mongo.Client {
-	if os.Getenv("ENV") == "dev" {
-		err := godotenv.Load()
-
-		if err != nil {
-			fmt.Println("Error loading .env file but don't worry, we are using the environment variables.")
-		}
-	}
+	godotenv.Load()
 	mongoUri := os.Getenv("MONGODB_URI")
 	fmt.Println(mongoUri)
 	ctx, cancelRetry := context.WithTimeout(context.Background(), 10*time.Second)

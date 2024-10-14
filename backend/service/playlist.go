@@ -36,6 +36,21 @@ func CreatePlaylist(playlist models.Playlist) (models.Playlist, error) {
 
 func GetPlaylist(id string) (playlist models.Playlist, err error) {
 	err = playlistCollection.FindOne(context.Background(), bson.M{"_id": id}).Decode(&playlist)
+  if err != nil {
+    return models.Playlist{}, err 
+  }
+  if len(playlist.MidiasId) == 0 {
+    return playlist, nil
+  }
+  var midias []models.Midia
+  cursor ,err := midiaCollection.Find(context.Background(), bson.M{"_id": bson.M{"$in": playlist.MidiasId}})
+  if err != nil {
+    return models.Playlist{}, err
+  }
+  if err := cursor.All(context.Background(), &midias); err != nil {
+    return models.Playlist{}, err
+  }
+  playlist.Midias = midias
 	return
 }
 
