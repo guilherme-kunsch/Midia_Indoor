@@ -1,0 +1,27 @@
+services:
+  mongo:
+    image: "mongo"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+      - TZ=America/Sao_Paulo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo-data:/data/db
+  pi-api:
+    image: ronanzindev/pi-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - MONGODB_URI=mongodb://root:root@mongo:27017
+      - TZ=America/Sao_Paulo
+      - ENV=dev
+      - AWS_ACCESS_KEY_ID=tid_qkjLePFZjjzzdYMJDw_lfpauaHGXcdKrcihkIZgaRzYcMoRyjr
+      - AWS_ENDPOINT_URL_S3=https://fly.storage.tigris.dev
+      - AWS_REGION=auto
+      - AWS_SECRET_ACCESS_KEY=tsec_kMWp+AtGJUq0ec27AdMO6A3Jy7QN5YpSq_tK7sjRPreACOHgv_7B1GaVbS-RsbzOGPsV4o
+      - BUCKET_NAME=pi4
+      - FILE_URL=https://pi4.fly.storage.tigris.dev/
+    depends_on:
+      - mongo
