@@ -48,6 +48,7 @@ func UpdatePlaylist(c echo.Context) error {
 	if err != nil {
 		return utils.ResponseError(c, http.StatusBadRequest, err.Error())
 	}
+  service.SendMessage(id,"upload")
 	return c.JSON(http.StatusOK, playlist)
 }
 

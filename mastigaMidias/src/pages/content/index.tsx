@@ -1,29 +1,22 @@
 import { useParams } from "react-router-dom";
-import API from "../../lib/api";
 import { useEffect, useState } from "react";
 import { Playlist, Midia } from "../../types/playlist";
 import TextView from "../../components/TextView";
 import mqtt from "mqtt";
-
+import { fetchPlaylistFromAPI } from "../../utils/playlist";
+import {Cache} from "../../types/cache"
 export const Content = () => {
     const { playlistId } = useParams();
     const [playlist, setPlaylist] = useState<Playlist | null>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
-    const [cachedUrls, setCachedUrls] = useState<{ [key: string]: string }>({});
+    const [cachedUrls, setCachedUrls] = useState<Cache>({});
 
-    const fetchPlaylistFromAPI = async (id: string) => {
-        return new API()
-            .get("/playlist/" + id)
-            .then((response) => {
-                if (response.status !== 200) throw new Error("Erro ao buscar playlists");
-                return response.data as Playlist;
-            });
-    };
+
 
     const cacheMidias = async (playlist: Playlist) => {
         const cache = await caches.open("midias-cache");
-        const newCacheUrls: { [key: string]: string } = {};
+        const newCacheUrls: Cache = {};
 
         const mediaPromises = playlist.midias.map(async (midia) => {
             const cachedResponse = await cache.match(midia.file_url);
@@ -31,61 +24,90 @@ export const Content = () => {
                 const fetchResponse = await fetch("http://localhost:8080/midia/file/" + midia.file_name);
                 if (fetchResponse.ok) {
                     await cache.put(midia.file_url, fetchResponse);
-                    const blob = await fetchResponse.blob();
+                    if(midia.file_type === "text") {
+                        const text = await fetchResponse.text()
+                        newCacheUrls[midia.file_url] = text
+                    }else {
+                        const blob = await fetchResponse.blob();
+                        const url = URL.createObjectURL(blob);
+                        newCacheUrls[midia.file_url] = url;
+                    }
+
+                }
+            } else {
+                if(midia.file_type === "text") {
+                    const text = await cachedResponse.text()
+                    newCacheUrls[midia.file_url] = text
+                }else {
+                    const blob = await cachedResponse.blob();
                     const url = URL.createObjectURL(blob);
                     newCacheUrls[midia.file_url] = url;
                 }
-            } else {
-                const blob = await cachedResponse.blob();
-                const url = URL.createObjectURL(blob);
-                newCacheUrls[midia.file_url] = url;
             }
         });
 
         await Promise.all(mediaPromises);
         setCachedUrls(newCacheUrls);
     };
+    const checkAndLoadCache = async () => {
+        try {
+            setIsLoading(true);
 
+            const cacheExists = await caches.has("midias-cache");
+            if (cacheExists) {
+                const cache = await caches.open("midias-cache");
+                const cachedResponse = await cache.match(playlistId!);
+
+                if (cachedResponse) {
+                    const cachedData = await cachedResponse.json();
+                    setPlaylist(cachedData);
+                }
+            }
+
+            if (!cacheExists || !playlist) {
+                const fetchedPlaylist = await fetchPlaylistFromAPI(playlistId!);
+                setPlaylist(fetchedPlaylist);
+
+                const cache = await caches.open("midias-cache");
+                const response = new Response(JSON.stringify(fetchedPlaylist));
+                await cache.put(playlistId!, response);
+
+                await cacheMidias(fetchedPlaylist);
+            }
+        } catch (error) {
+            console.error("Erro ao carregar a playlist ou o cache:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
     useEffect(() => {
-        const checkAndLoadCache = async () => {
+        const updateCache = async () => {
             try {
-                setIsLoading(true);
+                const fetchedPlaylist = await fetchPlaylistFromAPI(playlistId!);
+                setPlaylist(fetchedPlaylist);
+                const cache = await caches.open("midias-cache");
+                const response = new Response(JSON.stringify(fetchedPlaylist));
+                await cache.put(playlistId!, response);
 
-                const cacheExists = await caches.has("midias-cache");
-                if (cacheExists) {
-                    const cache = await caches.open("midias-cache");
-                    const cachedResponse = await cache.match(playlistId!);
-
-                    if (cachedResponse) {
-                        const cachedData = await cachedResponse.json();
-                        setPlaylist(cachedData);
-                    }
-                }
-
-                if (!cacheExists || !playlist) {
-                    const fetchedPlaylist = await fetchPlaylistFromAPI(playlistId!);
-                    setPlaylist(fetchedPlaylist);
-
-                    const cache = await caches.open("midias-cache");
-                    const response = new Response(JSON.stringify(fetchedPlaylist));
-                    await cache.put(playlistId!, response);
-
-                    await cacheMidias(fetchedPlaylist);
-                }
+                await cacheMidias(fetchedPlaylist);
             } catch (error) {
-                console.error("Erro ao carregar a playlist ou o cache:", error);
-            } finally {
-                setIsLoading(false);
+                console.error("Erro ao atualizar o cache via MQTT:", error);
             }
         };
-        const client = mqtt.connect("wss://a83b4fdcecf5450f96b470717e18f7e6.s1.eu.hivemq.cloud:8884/mqtt", { username: "ronandev", password: "@Ronan1605" })
+        const client = mqtt.connect("wss://a83b4fdcecf5450f96b470717e18f7e6.s1.eu.hivemq.cloud:8884/mqtt", { username: "midia", password: "@Mastiga123" })
         client.on("error", console.error)
         client.on('connect', () => {
             console.log("conneted")
+            client.subscribe(playlistId!)
         })
+
         client.on("message", (topic, message) => {
             if(topic === playlistId) {
-
+                const msg = message.toString()
+                if(msg === "upload") {
+                    updateCache()
+                    console.log("cache atualizado")
+                }
             }
         })
         checkAndLoadCache();
@@ -123,21 +145,20 @@ export const Content = () => {
     }, [currentIndex, playlist]);
 
     const renderMidia = (midia: Midia) => {
-        const cachedUrl = cachedUrls[midia.file_url];
-        if (!cachedUrl) return null;
-
+        const cached = cachedUrls[midia.file_url];
+        if (!cached) return null;
         switch (midia.file_type) {
             case "image":
                 return (
                     <div key={midia.id} className="w-full h-full flex justify-center items-center">
-                        <img src={cachedUrl} alt="" className="object-contain w-full h-full" />
+                        <img src={cached} alt="" className="object-contain w-full h-full" />
                     </div>
                 );
             case "video":
                 return (
                     <div key={midia.id} className="w-full h-full flex justify-center items-center">
                         <video
-                            src={cachedUrl}
+                            src={cached}
                             className="w-full h-full object-contain"
                             autoPlay
                             muted
@@ -148,7 +169,7 @@ export const Content = () => {
             case "text":
                 return (
                     <div key={midia.id} className="w-full h-full flex justify-center items-center">
-                        <TextView id={midia.id} className="text-center text-white text-3xl" />
+                        <TextView content={cached} className="text-center text-white text-3xl" />
                     </div>
                 );
             default:
