@@ -27,7 +27,7 @@ export const SelectDevice = () => {
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <Card className="w-full max-w-md">
                 <CardHeader>
-                    <CardTitle>Dispotivos</CardTitle>
+                    <CardTitle>Dispositivos</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Select onValueChange={(e) => setselectedDevice(e)}>
