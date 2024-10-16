@@ -36,7 +36,7 @@ export default function Playlist() {
     const [playlists, setPlaylists] = useState([])
     const fetchData = async () => {
         const response = await api.get("/playlist")
-        if(response.status === 200) setPlaylists(response.data)
+        if (response.status === 200) setPlaylists(response.data)
     }
     useEffect(() => {
         fetchData();
@@ -50,7 +50,7 @@ export default function Playlist() {
         setSelectedPlaylist(playlist);
         setShowPopUpEdit(true);
     };
-    
+
     return (
         <div className="w-full">
             <SideBar
@@ -83,7 +83,7 @@ export default function Playlist() {
                                     showDots={true}
                                     infinite={true}
                                     autoPlay={true}
-                                    autoPlaySpeed={3000}
+                                    autoPlaySpeed={1000}
                                     keyBoardControl={true}
                                     customTransition="all 0.5s"
                                     transitionDuration={500}
