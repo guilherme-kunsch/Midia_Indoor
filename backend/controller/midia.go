@@ -8,6 +8,15 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+func GetFile(c echo.Context) error {
+  name := c.Param("name")
+  file, err := service.GetFile(name)
+  if err != nil {
+    return utils.ResponseError(c, http.StatusBadRequest, err.Error())
+  }
+  return c.Blob(http.StatusOK, http.DetectContentType(file), file)
+}
+
 func GetMidia(c echo.Context) error {
 	id := c.Param("id")
 	midia, err := service.GetMidia(id)

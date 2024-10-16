@@ -4,7 +4,7 @@ let REACT_APP_API_URL = 'http://localhost:8080'
 if(process.env.REACT_APP_ENV === "prod") {
     REACT_APP_API_URL = process.env.REACT_APP_API_URL
 }
-console.log(process.env.REACT_APP_ENV, REACT_APP_API_URL)
+
 class API {
     async request(url, method, data = {}, config = {}) {
         const methodLower = method.toLowerCase()
@@ -26,10 +26,10 @@ class API {
     }
 
     async post(url, data = {}, config = {}) {
-        return await this.request(url, 'POST', data, config) 
+        return await this.request(url, 'POST', data, config)
     }
     async patch(url, data = {}, config = {}) {
-        return await this.request(url, 'PATCH', data, config) 
+        return await this.request(url, 'PATCH', data, config)
     }
 
     async delete(url) {

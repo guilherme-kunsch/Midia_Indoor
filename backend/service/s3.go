@@ -50,3 +50,18 @@ func DeleteFile(fileName string) error {
 	})
 	return err
 }
+
+func GetFile(name string) ([]byte, error) {
+  objOutput, err := s3Client.GetObject(context.Background(), &s3.GetObjectInput{
+    Bucket: aws.String(bucketName),
+    Key: aws.String(name),
+  })
+  if err != nil {
+    return nil, err
+  }
+  body, err := io.ReadAll(objOutput.Body)
+  if err != nil {
+    return nil, err
+  }
+  return body, nil
+}

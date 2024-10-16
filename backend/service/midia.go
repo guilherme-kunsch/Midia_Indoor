@@ -36,9 +36,15 @@ func GetMidias() ([]models.Midia, error) {
 
 func DeleteMidia(id string) error {
   filter := bson.M{"$pull": bson.M{"midias_id": id}}
-  _, err := playlistCollection.UpdateMany(context.Background(), bson.M{}, filter)
+  updatedPlaylist, err := playlistCollection.UpdateMany(context.Background(), bson.M{}, filter)
   if err != nil {
     return err
   }
-  return midiaCollection.FindOneAndDelete(context.Background(), bson.M{"_id": id}).Err()
+  err = midiaCollection.FindOneAndDelete(context.Background(), bson.M{"_id": id}).Err()
+  if err != nil {
+    return err
+  }
+  SendMessage(updatedPlaylist.UpsertedID.(string), "update")
+  return nil
+
 }

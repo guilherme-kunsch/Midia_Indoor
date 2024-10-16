@@ -36,6 +36,21 @@ func CreatePlaylist(playlist models.Playlist) (models.Playlist, error) {
 
 func GetPlaylist(id string) (playlist models.Playlist, err error) {
 	err = playlistCollection.FindOne(context.Background(), bson.M{"_id": id}).Decode(&playlist)
+  if err != nil {
+    return models.Playlist{}, err 
+  }
+  if len(playlist.MidiasId) == 0 {
+    return playlist, nil
+  }
+  var midias []models.Midia
+  cursor ,err := midiaCollection.Find(context.Background(), bson.M{"_id": bson.M{"$in": playlist.MidiasId}})
+  if err != nil {
+    return models.Playlist{}, err
+  }
+  if err := cursor.All(context.Background(), &midias); err != nil {
+    return models.Playlist{}, err
+  }
+  playlist.Midias = midias
 	return
 }
 
@@ -67,10 +82,19 @@ func UpdatePlaylist(id string, playlist models.Playlist) (models.Playlist, error
 	playlist.ID = id
 	playlist.UpdatedAt = bson.Now()
 	err = playlistCollection.FindOneAndUpdate(context.Background(), bson.M{"_id": id}, bson.M{"$set": playlist}).Err()
-	return playlist, err
+  if err != nil {
+    return models.Playlist{}, err
+  }
+  SendMessage(id, "update")
+	return playlist, nil
 }
 
 func DeletePlaylist(id string) error {
-	err := playlistCollection.FindOneAndDelete(context.Background(), bson.M{"_id": id}).Err()
-	return err
+  deviceCollection.UpdateMany(context.Background(), bson.M{"playlist_id": id}, bson.M{"$set": bson.M{"playlist_id": ""}})  
+  err := playlistCollection.FindOneAndDelete(context.Background(), bson.M{"_id": id}).Err()
+	if err  != nil {
+    return err
+  }
+  SendMessage(id , "delete")
+  return nil
 }

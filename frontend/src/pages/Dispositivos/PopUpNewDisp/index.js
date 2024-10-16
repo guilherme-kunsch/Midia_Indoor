@@ -13,7 +13,7 @@ export default function PopUpNewDisp({ setShowPopUp }) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-            
+
               const response = await api.get("/playlist");
               const data = response.data;
               setPlaylists(data);
@@ -22,19 +22,19 @@ export default function PopUpNewDisp({ setShowPopUp }) {
               console.error("Erro ao buscar dados:", error);
             }
           };
-      
+
           fetchData();
     }, [])
 
     const Save = async () => {
 
         try{
-            
+
             const data = {
                 name: nomeDisp,
                 playlist_id: playlistDisp
             }
-            
+
             const response = await api.post("/device", data);
             if(response.status === 200) {
                 alert('Dispositivo salvo com sucesso.')
@@ -57,7 +57,7 @@ export default function PopUpNewDisp({ setShowPopUp }) {
     };
 
     return (
-        
+
         <div className="fixed inset-0 z-50 flex items-center justify-center ">
             <div className="absolute inset-0 bg-black opacity-30"></div> {/* Fundo escuro semi-transparente */}
 
@@ -72,21 +72,21 @@ export default function PopUpNewDisp({ setShowPopUp }) {
 
                         <div className="m-12">
                             <label className="block text-black mb-2">Nome do Dispositivo:</label>
-                            <input 
-                                type="text" 
-                                className="w-full px-3 py-2 border rounded-lg text-black" 
-                                value={nomeDisp} 
+                            <input
+                                type="text"
+                                className="w-full px-3 py-2 border rounded-lg text-black"
+                                value={nomeDisp}
                                 onChange={(e) => setNomeDisp(e.target.value)}
-                                required 
+                                required
                             />
-                            
+
                             <label className="block text-black my-2">Playlist:</label>
-                            <select 
-                                className="w-full px-3 py-2 border rounded-lg text-black" 
+                            <select
+                                className="w-full px-3 py-2 border rounded-lg text-black"
                                 onChange={(e) => setPlaylistDisp(e.target.value)}
                             >
                                 <option value="">Nenhuma</option>
-                                {playlists.map((play, index) => (
+                                {playlists && playlists.map((play, index) => (
                                     <option value={play.id}>{play.name}</option>
                                 ))}
                             </select>

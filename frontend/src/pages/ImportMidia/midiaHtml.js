@@ -4,6 +4,7 @@ import { toast, ToastContainer, Bounce } from 'react-toastify'
 import { useNavigate } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
 import SideBar from '../../components/SideBar';
+import api from '../../api/api';
 export default function MidiaHtml() {
   const editorRef = useRef(null);
   const [contentName, setContentName] = useState('');
@@ -20,10 +21,7 @@ export default function MidiaHtml() {
       const formData = new FormData()
       formData.append('file', blob, contentName + ".html")
       try {
-        const response = await fetch('https://mastigadores.fly.dev/midia/upload', {
-          method: 'POST',
-          body: formData,
-        });
+        const response = await api.post('/midia/upload', formData);
         if (!response.ok) {
           throw new Error('Erro ao enviar o arquivo');
         }
@@ -31,8 +29,9 @@ export default function MidiaHtml() {
         navigate("/Gerenciamento")
       } catch (error) {
         console.error('Erro ao salvar o arquivo:', error);
-      }
+
       setErrorMessage('');
+      }
     }
   };
 
