@@ -94,8 +94,11 @@ export const Content = () => {
     useEffect(() => {
         if (playlist && playlist.midias && playlist.midias.length > 0) {
             const currentMedia = playlist.midias[currentIndex];
+            if(!currentMedia){
+                setCurrentIndex(0)
+                return
+            }
             let duration = 6000;
-
             if (currentMedia.file_type === "video") {
                 const videoElement = document.createElement("video");
                 videoElement.src = currentMedia.file_url;
