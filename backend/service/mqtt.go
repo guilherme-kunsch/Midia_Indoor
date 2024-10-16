@@ -37,5 +37,5 @@ func SendMessage(topic, message string) {
     fmt.Println(token.Error())
     return
   }
-  fmt.Printf("Messangem enviada ao topico %s\n", topic)
+  fmt.Printf("Messangem: %s, enviada ao topico %s\n", message, topic)
 }

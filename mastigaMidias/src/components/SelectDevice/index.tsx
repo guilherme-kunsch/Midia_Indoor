@@ -15,34 +15,35 @@ export const SelectDevice = () => {
             setDevices(response.data)
         })
     }
-    const handleClick = (playlistId: string) => {
-        navigate("/" + playlistId)
+    const handleClick = (device: string) => {
+        const [playlistId, deviceId] = device.split(",")
+        const path = `/${playlistId}?device=${deviceId}`
+        navigate(path)
     }
     useEffect(() => {
         fetchDevices()
     }, [])
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
-
-                <Card className="w-full max-w-md">
-                    <CardHeader>
-                        <CardTitle>Dispotivos</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <Select onValueChange={(e) => setselectedDevice(e)}>
-                            <SelectTrigger className="">
-                                <SelectValue placeholder="Selecione o dispositivo" />
-                            </SelectTrigger>
-                            <SelectContent >
+            <Card className="w-full max-w-md">
+                <CardHeader>
+                    <CardTitle>Dispotivos</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <Select onValueChange={(e) => setselectedDevice(e)}>
+                        <SelectTrigger className="">
+                            <SelectValue placeholder="Selecione o dispositivo" />
+                        </SelectTrigger>
+                        <SelectContent >
                             <SelectItem value="n">Nenhum</SelectItem>
-                                {devices && devices.map((device: Device) => (
-                                    <SelectItem key={device.id} value={device.playlist_id}>{device.name}</SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                        <Button disabled={selectedDevice == "n"} type="button" className="bg-green-300 w-full mt-6" onClick={() => handleClick(selectedDevice)}>Confirmar</Button>
-                    </CardContent>
-                </Card>
+                            {devices && devices.map((device: Device) => (
+                                device.playlist_id && (<SelectItem key={device.id} value={`${device.playlist_id},${device.id}`}>{device.name}</SelectItem>)
+                            ))}
+                        </SelectContent>
+                    </Select>
+                    <Button disabled={selectedDevice == "n"} type="button" className="bg-green-300 w-full mt-6" onClick={() => handleClick(selectedDevice)}>Confirmar</Button>
+                </CardContent>
+            </Card>
         </div>
     )
 }

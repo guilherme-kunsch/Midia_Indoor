@@ -1,8 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios"
 
-let API_URL : string = 'http://localhost:8080'
-
-
 class API {
     readonly request: AxiosInstance
     constructor() {
@@ -10,11 +7,7 @@ class API {
             Accept: 'application/json',
             'Content-Type': 'application/json'
         }})
-        if(import.meta.env.REACT_APP_ENV === "prod") {
-            this.request.defaults.baseURL =  import.meta.env.REACT_APP_ENV
-        } else {
-            this.request.defaults.baseURL = "http://localhost:8080"
-        }
+            this.request.defaults.baseURL =  import.meta.env.VITE_API_URL
     }
 
     async get(path: string, config?: AxiosRequestConfig) {
