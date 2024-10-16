@@ -63,7 +63,7 @@ export default function Gerenciamento() {
           <source src={midia.file_url} type="video/mp4" />
         </video>
         )
-      case "text": 
+      case "text":
           return (
           <div className="max-h-60 text-black"><TextView id={midia.id}/></div>
         )
@@ -105,7 +105,7 @@ export default function Gerenciamento() {
                 onClick={() => handleDelete(midia.id)}
               />
               <h1 className="text-white w-full mr-6">
-                {midia.file_name}
+                {midia.file_original_name}
               </h1>
             </div>
 

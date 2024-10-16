@@ -58,7 +58,7 @@ export default function PopUpNovaPlaylist({ setShowPopUp }) {
                 setMidias(midias)
             }
         }
-        
+
     }
     const removeMedia = (media) => {
         setMidias(state => [...state, media])
@@ -69,8 +69,8 @@ export default function PopUpNovaPlaylist({ setShowPopUp }) {
 
     }, [])
     return (
-        
-       
+
+
         <div className="fixed inset-0 z-50 flex items-center justify-center w-screen">
             <div className="absolute inset-0 bg-black opacity-30"></div>
 
@@ -92,11 +92,11 @@ export default function PopUpNovaPlaylist({ setShowPopUp }) {
                                         <h3 className="text-black">Mídias</h3>
                                         <div className="bg-white text-black h-72 border border-dark-blue pb-24 overflow-scroll">
                                             {midias.map((midia, index) => (
-                                                <div 
-                                                    key={index} 
-                                                    className="flex text-start my-2 py-1 px-2 hover:bg-dark-blue hover:text-white rounded-lg justify-between" 
+                                                <div
+                                                    key={index}
+                                                    className="flex text-start my-2 py-1 px-2 hover:bg-dark-blue hover:text-white rounded-lg justify-between"
                                                 >
-                                                    <span className="text-sm">{midia.file_name}</span>
+                                                    <span className="text-sm">{midia.file_original_name}</span>
                                                     <button className="text-sm w-20 bg-blue-500 rounded-lg" type="button" onClick={() => openPreviewModal(midia)}>Preview</button>
                                                     <button className="text-sm w-20 bg-green-500 rounded-lg" type="button" onClick={() => {
                                                                  setSelectedMidia(state => [...state, midia])
@@ -108,11 +108,11 @@ export default function PopUpNovaPlaylist({ setShowPopUp }) {
                                     </div>
 
                                     <div className="grid text-white my-24 px-4">
-                                        {/* <FaAnglesLeft 
+                                        {/* <FaAnglesLeft
                                             className="rounded-full bg-dark-purple w-5 h-5 p-0.5 cursor-pointer"
                                             onClick={() => setSelectedMidia([])}
                                         />
-                                        <FaAnglesRight 
+                                        <FaAnglesRight
                                             className="rounded-full bg-dark-purple w-5 h-5 p-0.5 cursor-pointer"
                                             onClick={() => setSelectedMidia(midias)}/> */}
                                     </div>
@@ -121,13 +121,13 @@ export default function PopUpNovaPlaylist({ setShowPopUp }) {
                                         <h3 className="text-black">Selecionadas</h3>
                                         <div className="bg-white text-black h-72 border border-dark-blue pb-24 overflow-scroll">
                                             {selectedMidia.map((midia, index) => (
-                                                <div 
-                                                    key={index} 
+                                                <div
+                                                    key={index}
                                                     className="flex text-start my-2 py-1 px-2 hover:bg-dark-blue hover:text-white rounded-lg justify-between"
                                                 >
-                                                    <span className="text-sm">{midia.file_name}</span>
+                                                    <span className="text-sm">{midia.file_original_name}</span>
                                                     <button type="button" className="text-sm w-20 rounded-lg bg-red-500" onClick={() => removeMedia(midia)}>Remover</button>
-                                                </div> 
+                                                </div>
                                             ))}
                                         </div>
                                     </div>

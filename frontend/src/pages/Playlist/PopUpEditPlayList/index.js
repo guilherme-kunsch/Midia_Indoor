@@ -102,7 +102,7 @@ export default function PopUpEditPlaylist({ setShowPopUpEdit, playlist }) {
                                                     key={index}
                                                     className="flex text-start my-2 py-1 px-2 hover:bg-dark-blue hover:text-white rounded-lg justify-between"
                                                 >
-                                                    <span className="text-sm">{midia.file_name}</span>
+                                                    <span className="text-sm">{midia.file_original_name}</span>
                                                     <button className="text-sm w-20 bg-blue-500 rounded-lg" type="button" onClick={() => openPreviewModal(midia)}>Preview</button>
                                                     <button className="text-sm w-20 bg-green-500 rounded-lg" type="button" onClick={() => {
                                                         setSelectedMidia(state => [...state, midia])
@@ -114,11 +114,11 @@ export default function PopUpEditPlaylist({ setShowPopUpEdit, playlist }) {
                                     </div>
 
                                     <div className="grid text-white my-24 px-4">
-                                        {/* <FaAnglesLeft 
+                                        {/* <FaAnglesLeft
                                             className="rounded-full bg-dark-purple w-5 h-5 p-0.5 cursor-pointer"
                                             onClick={() => setSelectedMidia([])}
                                         />
-                                        <FaAnglesRight 
+                                        <FaAnglesRight
                                             className="rounded-full bg-dark-purple w-5 h-5 p-0.5 cursor-pointer"
                                             onClick={() => setSelectedMidia(midias)}/> */}
                                     </div>
@@ -131,7 +131,7 @@ export default function PopUpEditPlaylist({ setShowPopUpEdit, playlist }) {
                                                     key={index}
                                                     className="flex text-start my-2 py-1 px-2 hover:bg-dark-blue hover:text-white rounded-lg justify-between"
                                                 >
-                                                    <span className="text-sm">{midia.file_name}</span>
+                                                    <span className="text-sm">{midia.file_original_name}</span>
                                                     <button type="button" className="text-sm w-20 rounded-lg bg-red-500" onClick={() => removeMedia(midia)}>Remover</button>
                                                 </div>
                                             ))}
