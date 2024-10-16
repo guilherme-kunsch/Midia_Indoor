@@ -50,7 +50,7 @@ export default function Playlist() {
         setSelectedPlaylist(playlist);
         setShowPopUpEdit(true);
     };
-    
+
     return (
         <div className="w-full">
             <SideBar
@@ -94,10 +94,10 @@ export default function Playlist() {
                                 >
                                     {play.midias ? play.midias.map((midia, midiaIndex) => {
                                         return (
-                                            // <h3 key={midiaIndex} className="text-black bg-flash-white py-4 my-4 rounded-lg">{midia.file_name}</h3>
+                                            // <h3 key={midiaIndex} className="text-black bg-flash-white py-4 my-4 rounded-lg">{midia.file_original_name}</h3>
                                             <div key={midiaIndex} className="w-full flex justify-center text-center my-6">
                                                 {midia && midia.file_type === "image" && (
-                                                    <img src={midia.file_url} alt={midia.file_name} className="max-w-full h-auto" />
+                                                    <img src={midia.file_url} alt={midia.file_original_name} className="max-w-full h-auto" />
                                                 )}
                                                 {midia && midia.file_type === "video" && (
                                                     <video src={midia.file_url} controls className="max-w-full h-auto" />
