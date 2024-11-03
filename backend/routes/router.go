@@ -43,4 +43,9 @@ func AddRoutes(e *echo.Echo) {
 		device.PATCH("/:id", controller.UpdateDevice)
 		device.DELETE("/:id", controller.DeleteDevice)
 	}
+	password := e.Group("/password")
+	{
+		password.GET("", controller.GetAllPassword)
+		password.POST("", controller.SavePassword)
+	}
 }
