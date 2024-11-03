@@ -23,11 +23,6 @@ func NewMongoDB() *mongo.Client {
 			fmt.Println("Error loading .env file but don't worry, we are using the environment variables.")
 		}
 	}
-	err := godotenv.Load()
-	if err != nil {
-		fmt.Println("Error loading .env file but don't worry, we are using the environment variables.")
-	}
-	fmt.Println("MONGODB_URI from .env:", os.Getenv("MONGODB_URI"))
 	mongoUri := os.Getenv("MONGODB_URI")
 	fmt.Println(mongoUri)
 	ctx, cancelRetry := context.WithTimeout(context.Background(), 10*time.Second)
