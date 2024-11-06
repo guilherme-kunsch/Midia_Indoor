@@ -11,9 +11,16 @@ export default function GerenciarSenhas() {
   const [numSenhasPreferenciais, setNumSenhasPreferenciais] = useState(1); 
   const [indexNormal, setIndexNormal] = useState(0); 
   const [indexPreferencial, setIndexPreferencial] = useState(0);
+  const [mqttSenhas, setMqttSenhas] = useState({
+    normal: [],
+    preferencial: []
+  });
+
+  console.log(MQTT_URL)
+  console.log(MQTT_USER)
+  console.log(MQTT_PASSWORD)
 
   useEffect(() => {
-    // Conectar ao MQTT
     const client = mqtt.connect(MQTT_URL, {
       username: MQTT_USER,
       password: MQTT_PASSWORD
@@ -21,17 +28,16 @@ export default function GerenciarSenhas() {
 
     client.on("connect", () => {
       console.log("Conectado ao MQTT");
-      // Inscrever-se nos tópicos de senha
       client.subscribe("senhas/normal");
       client.subscribe("senhas/preferencial");
     });
 
     client.on("message", (topic, message) => {
-      const receivedValue = parseInt(message.toString(), 10);
+      const receivedValue = message.toString();
       if (topic === "senhas/normal") {
-        setIndexNormal(receivedValue);
+        setMqttSenhas(prev => ({ ...prev, normal: [...prev.normal, receivedValue] }));
       } else if (topic === "senhas/preferencial") {
-        setIndexPreferencial(receivedValue);
+        setMqttSenhas(prev => ({ ...prev, preferencial: [...prev.preferencial, receivedValue] }));
       }
     });
 
@@ -187,28 +193,20 @@ export default function GerenciarSenhas() {
           </div>
         </div>
 
-        {/* Configurar Senhas */}
+        {/* Exibindo as senhas recebidas via MQTT */}
         <div className="w-full h-70 bg-gray-200 py-8 px-20 rounded-lg mt-8">
-          <h1 className="text-black mb-4 text-3xl font-bold">Configurar Senhas</h1>
-          <div className="flex justify-center mb-8 space-x-8">
-            <div className="flex flex-col items-center">
-              <label className="text-black font-bold mb-2">Quantidade de Senhas Normais:</label>
-              <input
-                type="number"
-                value={numSenhasNormais}
-                onChange={handleNumSenhasNormaisChange}
-                className="w-16 p-2 text-center border rounded"
-              />
-            </div>
-            <div className="flex flex-col items-center">
-              <label className="text-black font-bold mb-2">Quantidade de Senhas Preferenciais:</label>
-              <input
-                type="number"
-                value={numSenhasPreferenciais}
-                onChange={handleNumSenhasPreferenciaisChange}
-                className="w-16 p-2 text-center border rounded"
-              />
-            </div>
+          <h1 className="text-black mb-4 text-3xl font-bold">Senhas Recebidas via MQTT</h1>
+          <div>
+            <h2 className="text-black text-xl mb-4">Senha Normal:</h2>
+            {mqttSenhas.normal.map((senha, index) => (
+              <p key={index} className="text-black">{senha}</p>
+            ))}
+          </div>
+          <div>
+            <h2 className="text-black text-xl mb-4">Senha Preferencial:</h2>
+            {mqttSenhas.preferencial.map((senha, index) => (
+              <p key={index} className="text-black">{senha}</p>
+            ))}
           </div>
         </div>
 
