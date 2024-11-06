@@ -32,7 +32,6 @@ export const Content = () => {
         if (topic === playlistId) {
             const msg = message.toString()
             if (msg === "update") {
-                console.log("updating cache")
                setCache(await updateCache(topic))
             }
             if (msg === "delete") {

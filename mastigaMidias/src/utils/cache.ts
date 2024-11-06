@@ -2,7 +2,6 @@ import { CacheInfo } from "@/types/cache";
 import { Playlist } from "@/types/playlist";
 import { fetchPlaylistFromAPI } from "./playlist";
 
-
 const FETCH_FILE_API_URL = import.meta.env.VITE_API_URL + "/midia/file/"
 export const fillCache =  async (playlist: Playlist) : Promise<CacheInfo[]>=> {
     const dados: CacheInfo[] = []
@@ -12,12 +11,11 @@ export const fillCache =  async (playlist: Playlist) : Promise<CacheInfo[]>=> {
         if(cachedResponse) {
             dados.push({cacheData: await getContentType(midia.file_type, cachedResponse), fileType: midia.file_type, duration: midia.duration})
         } else {
-            fetch(FETCH_FILE_API_URL+ midia.file_name).then(async (response) => {
+            await fetch(FETCH_FILE_API_URL+ midia.file_name).then(async (response) => {
                 if (!response.ok) throw new Error('Erro no Download do Arquivo ' + midia.file_url);
-                const responseClone = response.clone()
-                const clone = responseClone.clone()
-                cache.put(FETCH_FILE_API_URL+ midia.file_name, responseClone)
-                dados.push({cacheData: await getContentType(midia.file_type, clone), fileType: midia.file_type, duration: midia.duration})
+                const clone = response.clone()
+                dados.push({cacheData: await getContentType(midia.file_type, response), fileType: midia.file_type, duration: midia.duration})
+                await cache.put(FETCH_FILE_API_URL+ midia.file_name, clone)
             }).catch(err => console.log(err))
         }
     }
