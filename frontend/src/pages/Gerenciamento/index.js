@@ -2,21 +2,15 @@ import React, { useEffect, useState } from "react";
 import SideBar from "../../components/SideBar";
 import { useNavigate } from "react-router-dom";
 import PopUpImage from "./PopUpImage";
-import TextView from '../../components/TextView'
-// import PopUpEditMidia from "./PopUpEditMidia";
-
+import TextView from "../../components/TextView";
 import { TiDelete } from "react-icons/ti";
 import api from "../../api/api";
 
 export default function Gerenciamento() {
   const [showPopUp, setShowPopUp] = useState(false);
-  // const [showPopUpEdit, setShowPopUpEdit] = useState(false);
-
   const [imagem, setImagem] = useState(null);
-  // const [midiaTitle, setMidiaTitle] = useState(null);
-
   const [midias, setMidias] = useState([]);
-
+  const [duracoes, setDuracoes] = useState({});
   const navigate = useNavigate();
 
   const handleImagemClick = (img) => {
@@ -24,28 +18,37 @@ export default function Gerenciamento() {
     setShowPopUp(true);
   };
 
-  const handleDelete = async (id) => {
-    const confirm = window.confirm(
-      "Tem certeza que deseja remover essa mídia?"
-    );
-
-    if (!confirm) {
-      return;
-    }
-    const response = await api.delete(`/midia/${id}`)
-    if(response.status === 200) {
-      window.location.reload();
-    }
-
+  const handleDurationChange = (id, value) => {
+    setDuracoes((prev) => ({
+      ...prev,
+      [id]: value * 1000, // Converte segundos para milissegundos
+    }));
   };
+
+  const handleDelete = async (id) => {
+    const confirm = window.confirm("Tem certeza que deseja remover essa mídia?");
+    if (!confirm) return;
+
+    const response = await api.delete(`/midia/${id}`);
+    if (response.status === 200) window.location.reload();
+  };
+
   const fetchData = async () => {
-    const response = await api.get('/midia')
-    setMidias(response.data)
-}
+    const response = await api.get("/midia");
+    setMidias(response.data);
+
+    // Inicializa as durações com valor padrão (1000ms)
+    const initialDurations = response.data.reduce((acc, midia) => {
+      acc[midia.id] = 1000; // 1 segundo padrão
+      return acc;
+    }, {});
+    setDuracoes(initialDurations);
+  };
 
   useEffect(() => {
     fetchData();
   }, []);
+
   const renderMidia = (midia) => {
     switch (midia.file_type) {
       case "image":
@@ -56,21 +59,24 @@ export default function Gerenciamento() {
             alt="logo"
             onClick={() => handleImagemClick(midia.file_url)}
           />
-        )
+        );
       case "video":
         return (
           <video className="max-h-60" controls>
-          <source src={midia.file_url} type="video/mp4" />
-        </video>
-        )
+            <source src={midia.file_url} type="video/mp4" />
+          </video>
+        );
       case "text":
-          return (
-          <div className="max-h-60 text-black"><TextView id={midia.id}/></div>
-        )
+        return (
+          <div className="max-h-60 text-black">
+            <TextView id={midia.id} />
+          </div>
+        );
       default:
-        return (<></>)
+        return <></>;
     }
-  }
+  };
+
   return (
     <div className="w-full">
       <SideBar title={"GERENCIAMENTO"} />
@@ -95,8 +101,11 @@ export default function Gerenciamento() {
       </div>
 
       <div className="pl-40 w-full grid grid-cols-2">
-        {midias && midias.map((midia, index) => (
-          <div key={index} className="w-9/12 h-70 mb-9 bg-gray-200  rounded-lg">
+        {midias.map((midia, index) => (
+          <div
+            key={index}
+            className="w-9/12 h-70 mb-9 bg-gray-200 rounded-lg"
+          >
             <div className="justify-center text-center flex bg-dark-blue p-4 rounded-t-lg">
               <TiDelete
                 size={22}
@@ -110,25 +119,22 @@ export default function Gerenciamento() {
             </div>
 
             <div className="h-60 justify-center flex text-center m-auto items-center">
-             {renderMidia(midia)}
+              {renderMidia(midia)}
             </div>
-
-            {/* <div className="justify-center items-center flex mt-8">
-                                <h3 className="text-black bg-green-300 py-4 px-10 rounded-lg" onClick={() => handleEditClick(midia.file_name)}>Editar</h3>
-                                <h3 className="text-black bg-red-300 py-4 px-24 rounded-lg cursor-pointer" onClick={() => handleDelete(midia.id)}>Excluir</h3>
-                            </div> */}
-          </div>
+            <div className="flex justify-center mt-4">
+              <label className="mr-2 text-slate-900">Duração (s):</label>
+              <input
+                type="number"
+                min="1"
+                value={duracoes[midia.id] / 1000 || 1}
+                onChange={(e) => handleDurationChange(midia.id, e.target.value)}
+                className="w-16 border mb-3 border-slate-900 rounded-md text-center"
+              />
+            </div>          </div>
         ))}
       </div>
 
       {showPopUp && <PopUpImage setShowPopUp={setShowPopUp} img={imagem} />}
-
-      {/* {showPopUpEdit && (
-        <PopUpEditMidia
-          setShowPopUpEdit={setShowPopUpEdit}
-          Midia={midiaTitle}
-        />
-      )} */}
     </div>
   );
 }

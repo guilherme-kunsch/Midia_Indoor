@@ -1,19 +1,58 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SideBar from "../../components/SideBar";
+import mqtt from 'mqtt'
+
+const MQTT_URL = process.env.REACT_APP_MQTT_URL;
+const MQTT_USER = process.env.REACT_APP_MQTT_USER;
+const MQTT_PASSWORD = process.env.REACT_APP_MQTT_PASSWORD;
 
 export default function GerenciarSenhas() {
-  const [numSenhasNormais, setNumSenhasNormais] = useState(1); // Quantidade de senhas normais no dia
-  const [numSenhasPreferenciais, setNumSenhasPreferenciais] = useState(1); // Quantidade de senhas preferenciais no dia
-  const [indexNormal, setIndexNormal] = useState(0); // Índice da senha normal atual
-  const [indexPreferencial, setIndexPreferencial] = useState(0); // Índice da senha preferencial atual
-  const [senhasNormais, setSenhasNormais] = useState(Array.from({ length: numSenhasNormais }, (_, i) => `${i}`)); // Senhas Normais
-  const [senhasPreferenciais, setSenhasPreferenciais] = useState(Array.from({ length: numSenhasPreferenciais }, (_, i) => `P${i}`)); // Senhas Preferenciais
+  const [numSenhasNormais, setNumSenhasNormais] = useState(1); 
+  const [numSenhasPreferenciais, setNumSenhasPreferenciais] = useState(1); 
+  const [indexNormal, setIndexNormal] = useState(0); 
+  const [indexPreferencial, setIndexPreferencial] = useState(0);
+  const [mqttSenhas, setMqttSenhas] = useState({
+    normal: [],
+    preferencial: []
+  });
+
+
+
+  useEffect(() => {
+    const client = mqtt.connect(MQTT_URL, {
+      username: MQTT_USER,
+      password: MQTT_PASSWORD
+    });
+
+    client.on("connect", () => {
+      console.log("Conectado ao MQTT");
+      client.subscribe("senhas/normal");
+      client.subscribe("senhas/preferencial");
+    });
+
+    client.on("message", (topic, message) => {
+      const receivedValue = message.toString();
+      if (topic === "senhas/normal") {
+        setMqttSenhas(prev => ({ ...prev, normal: [...prev.normal, receivedValue] }));
+      } else if (topic === "senhas/preferencial") {
+        setMqttSenhas(prev => ({ ...prev, preferencial: [...prev.preferencial, receivedValue] }));
+      }
+    });
+
+    client.on("error", (error) => {
+      console.error("Erro na conexão MQTT:", error);
+    });
+
+    return () => {
+      client.end(() => console.log("Conexão MQTT encerrada"));
+    };
+  }, []);
 
   const handleNumSenhasNormaisChange = (e) => {
     const newNumSenhas = parseInt(e.target.value, 10);
     if (newNumSenhas > 0) {
       setNumSenhasNormais(newNumSenhas);
-      setSenhasNormais(Array.from({ length: newNumSenhas }, (_, i) => `${i}`));
+      setNumSenhasNormais(Array.from({ length: newNumSenhas }, (_, i) => `${i}`));
       setIndexNormal(0);
     }
   };
@@ -22,7 +61,7 @@ export default function GerenciarSenhas() {
     const newNumSenhas = parseInt(e.target.value, 10);
     if (newNumSenhas > 0) {
       setNumSenhasPreferenciais(newNumSenhas);
-      setSenhasPreferenciais(Array.from({ length: newNumSenhas }, (_, i) => `P${i}`));
+      setNumSenhasPreferenciais(Array.from({ length: newNumSenhas }, (_, i) => `P${i}`));
       setIndexPreferencial(0);
     }
   };
@@ -41,11 +80,11 @@ export default function GerenciarSenhas() {
 
   const handleNextPassword = (isPreferencial) => {
     if (isPreferencial) {
-      if (indexPreferencial < senhasPreferenciais.length - 1) {
+      if (indexPreferencial < numSenhasPreferenciais.length - 1) {
         setIndexPreferencial(indexPreferencial + 1);
       }
     } else {
-      if (indexNormal < senhasNormais.length - 1) {
+      if (indexNormal < numSenhasNormais.length - 1) {
         setIndexNormal(indexNormal + 1);
       }
     }
@@ -69,19 +108,19 @@ export default function GerenciarSenhas() {
             <div className="flex flex-col items-center">
               <p className="text-black font-bold">Senha Anterior</p>
               <h3 className="text-black font-bo text-center w-full bg-gray-300 p-4 rounded-lg">
-                {indexNormal > 0 ? senhasNormais[indexNormal - 1] : "N/A"}
+                {indexNormal > 0 ? numSenhasNormais[indexNormal - 1] : "N/A"}
               </h3>
             </div>
             <div className="flex flex-col items-center">
               <p className="text-black font-bold">Senha Atual</p>
               <h3 className="text-black font-bo text-center w-full bg-gray-300 p-4 rounded-lg">
-                {senhasNormais[indexNormal]}
+                {numSenhasNormais[indexNormal]}
               </h3>
             </div>
             <div className="flex flex-col items-center">
               <p className="text-black font-bold">Próxima Senha</p>
               <h3 className="text-black font-bo text-center w-full bg-gray-300 p-4 rounded-lg">
-                {indexNormal < senhasNormais.length - 1 ? senhasNormais[indexNormal + 1] : "N/A"}
+                {indexNormal < numSenhasNormais.length - 1 ? numSenhasNormais[indexNormal + 1] : "N/A"}
               </h3>
             </div>
           </div>
@@ -114,19 +153,19 @@ export default function GerenciarSenhas() {
             <div className="flex flex-col items-center">
               <p className="text-black font-bold">Senha Anterior</p>
               <h3 className="text-black font-bo text-center w-full bg-gray-300 p-4 rounded-lg">
-                {indexPreferencial > 0 ? senhasPreferenciais[indexPreferencial - 1] : "N/A"}
+                {indexPreferencial > 0 ? numSenhasPreferenciais[indexPreferencial - 1] : "N/A"}
               </h3>
             </div>
             <div className="flex flex-col items-center">
               <p className="text-black font-bold">Senha Atual</p>
               <h3 className="text-black font-bo text-center w-full bg-gray-300 p-4 rounded-lg">
-                {senhasPreferenciais[indexPreferencial]}
+                {numSenhasPreferenciais[indexPreferencial]}
               </h3>
             </div>
             <div className="flex flex-col items-center">
               <p className="text-black font-bold">Próxima Senha</p>
               <h3 className="text-black font-bo text-center w-full bg-gray-300 p-4 rounded-lg">
-                {indexPreferencial < senhasPreferenciais.length - 1 ? senhasPreferenciais[indexPreferencial + 1] : "N/A"}
+                {indexPreferencial < numSenhasPreferenciais.length - 1 ? numSenhasPreferenciais[indexPreferencial + 1] : "N/A"}
               </h3>
             </div>
           </div>
@@ -152,28 +191,20 @@ export default function GerenciarSenhas() {
           </div>
         </div>
 
-        {/* Configurar Senhas */}
+        {/* Exibindo as senhas recebidas via MQTT */}
         <div className="w-full h-70 bg-gray-200 py-8 px-20 rounded-lg mt-8">
-          <h1 className="text-black mb-4 text-3xl font-bold">Configurar Senhas</h1>
-          <div className="flex justify-center mb-8 space-x-8">
-            <div className="flex flex-col items-center">
-              <label className="text-black font-bold mb-2">Quantidade de Senhas Normais:</label>
-              <input
-                type="number"
-                value={numSenhasNormais}
-                onChange={handleNumSenhasNormaisChange}
-                className="w-16 p-2 text-center border rounded"
-              />
-            </div>
-            <div className="flex flex-col items-center">
-              <label className="text-black font-bold mb-2">Quantidade de Senhas Preferenciais:</label>
-              <input
-                type="number"
-                value={numSenhasPreferenciais}
-                onChange={handleNumSenhasPreferenciaisChange}
-                className="w-16 p-2 text-center border rounded"
-              />
-            </div>
+          <h1 className="text-black mb-4 text-3xl font-bold">Senhas Recebidas via MQTT</h1>
+          <div>
+            <h2 className="text-black text-xl mb-4">Senha Normal:</h2>
+            {mqttSenhas.normal.map((senha, index) => (
+              <p key={index} className="text-black">{senha}</p>
+            ))}
+          </div>
+          <div>
+            <h2 className="text-black text-xl mb-4">Senha Preferencial:</h2>
+            {mqttSenhas.preferencial.map((senha, index) => (
+              <p key={index} className="text-black">{senha}</p>
+            ))}
           </div>
         </div>
 
