@@ -11,6 +11,7 @@ export interface Midia {
     file_original_name: string
     file_url: string
     file_type: string
+    duration: number
 }
 
 export enum FILETYPES {

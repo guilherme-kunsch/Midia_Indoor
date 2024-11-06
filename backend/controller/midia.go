@@ -9,12 +9,12 @@ import (
 )
 
 func GetFile(c echo.Context) error {
-  name := c.Param("name")
-  file, err := service.GetFile(name)
-  if err != nil {
-    return utils.ResponseError(c, http.StatusBadRequest, err.Error())
-  }
-  return c.Blob(http.StatusOK, http.DetectContentType(file), file)
+	name := c.Param("name")
+	file, err := service.GetFile(name)
+	if err != nil {
+		return utils.ResponseError(c, http.StatusBadRequest, err.Error())
+	}
+	return c.Blob(http.StatusOK, http.DetectContentType(file), file)
 }
 
 func GetMidia(c echo.Context) error {
