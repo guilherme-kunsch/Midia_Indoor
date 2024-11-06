@@ -21,7 +21,7 @@ func AddRoutes(e *echo.Echo) {
 	e.GET("/html/:id", controller.GetHtmlContent)
 	midia := e.Group("/midia")
 	{
-    midia.GET("/file/:name", controller.GetFile)
+		midia.GET("/file/:name", controller.GetFile)
 		midia.POST("/upload", controller.Upload)
 		midia.POST("/upload/html", controller.UploadHtmlContent)
 		midia.GET("/:id", controller.GetMidia)

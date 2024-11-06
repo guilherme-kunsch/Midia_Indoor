@@ -41,18 +41,18 @@ func UpdateDevice(id string, device models.Device) (models.Device, error) {
 	device.ID = id
 	err := deviceCollection.FindOneAndUpdate(context.Background(), bson.M{"_id": id}, bson.M{"$set": bson.M{"id": id, "name": device.Name, "playlist_id": device.PlaylistID, "updated_at": bson.Now()}}, options.FindOneAndUpdate().SetReturnDocument(1)).Decode(&device)
 	if err != nil {
-    return models.Device{}, err
-  }
-  SendMessage(id, "update")
-  return device, nil
+		return models.Device{}, err
+	}
+	SendMessage(id, "update")
+	return device, nil
 }
 
 func DeleteDevice(id string) error {
-  err := deviceCollection.FindOneAndDelete(context.Background(), bson.M{"_id": id}).Err()
-  if err != nil {
-    return err
-  }
-  SendMessage(id, "delete")
-  return nil
+	err := deviceCollection.FindOneAndDelete(context.Background(), bson.M{"_id": id}).Err()
+	if err != nil {
+		return err
+	}
+	SendMessage(id, "delete")
+	return nil
 
 }

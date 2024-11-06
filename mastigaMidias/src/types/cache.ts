@@ -1,3 +1,7 @@
-export type Cache = {
-    [key: string]: string
+
+
+export type CacheInfo  = {
+    cacheData: string
+    fileType: string
+    duration: number
 }

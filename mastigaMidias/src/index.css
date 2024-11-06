@@ -6,3 +6,11 @@
     --radius: 0.5rem
   }
 }
+
+body, html {
+    padding:0;
+    margin:0;
+    vertical-align:baseline;
+    list-style:none;
+    border:0
+}
