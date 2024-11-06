@@ -12,6 +12,7 @@
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.7",
     "html-to-react": "^1.7.0",
+    "mqtt": "^5.10.1",
     "postcss": "^8.4.41",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
