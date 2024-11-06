@@ -16,9 +16,7 @@ export default function GerenciarSenhas() {
     preferencial: []
   });
 
-  console.log(MQTT_URL)
-  console.log(MQTT_USER)
-  console.log(MQTT_PASSWORD)
+
 
   useEffect(() => {
     const client = mqtt.connect(MQTT_URL, {
