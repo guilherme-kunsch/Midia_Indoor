@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import SideBar from "../../components/SideBar";
 import mqtt from 'mqtt'
 
-const MQTT_URL = import.meta.env.REACT_APP_MQTT_URL;
-const MQTT_USER = import.meta.env.REACT_APP_MQTT_USER;
-const MQTT_PASSWORD = import.meta.env.REACT_APP_MQTT_PASSWORD;
+const MQTT_URL = process.env.REACT_APP_MQTT_URL;
+const MQTT_USER = process.env.REACT_APP_MQTT_USER;
+const MQTT_PASSWORD = process.env.REACT_APP_MQTT_PASSWORD;
 
 export default function GerenciarSenhas() {
   const [numSenhasNormais, setNumSenhasNormais] = useState(1); 
