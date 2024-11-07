@@ -14,3 +14,19 @@ body, html {
     list-style:none;
     border:0
 }
+
+/* CSS global (index.css, global.css ou tailwind.css) */
+
+
+.marquee {
+  overflow: hidden;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+}
+
+.marquee-content {
+  display: inline-flex;
+  min-width: 100%;
+  animation: scrollText 30s linear infinite;
+}
