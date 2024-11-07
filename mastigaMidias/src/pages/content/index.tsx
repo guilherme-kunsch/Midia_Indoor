@@ -7,6 +7,7 @@ import { CacheInfo } from "@/types/cache";
 import { fillCache, updateCache } from "@/utils/cache";
 import { FILETYPES } from "@/types/playlist";
 import TextView from "@/components/TextView";
+import Marquee from "@/components/Marquee";
 
 export const Content = () => {
     const navigate = useNavigate()
@@ -19,6 +20,25 @@ export const Content = () => {
     const deviceId = queryParams.get("device");
     const [currentIndex, setCurrentIndex] = useState(0);
     const [cache, setCache] = useState<CacheInfo[] | null>(null);
+
+    const [senhas, setSenhas ] = useState([
+        {
+            senha: "UCL001", guiche: "001"
+        },
+        {
+            senha: "UCL002", guiche: "002"
+        },
+        {
+            senha: "UCL003", guiche: "003"
+        },
+        {
+            senha: "UCL004", guiche: "004"
+        },
+        {
+            senha: "UCL005", guiche: "005"
+        },
+    ])
+
     if(!playlistId) return <>Loading...</>
     useEffect(() => {
         const fetchCache = async () => {
@@ -112,7 +132,7 @@ export const Content = () => {
     }
     const renderMidia = (midia: CacheInfo) => {
         if (!midia) return null
-        const midiaClassName = "absolute top-0 left-0 w-full h-full object-cover"
+        const midiaClassName = "flex top-0 left-0 w-full max-h-1/4 object-cover"
         switch (midia.fileType) {
             case FILETYPES.TEXT:
                 return (
@@ -145,6 +165,31 @@ export const Content = () => {
         }
     }
     return (
-        <div className="h-full overflow-hidden p-0 m-0 border-0 align-baseline list-none">{cache && cache.length > 0 && renderMidia(cache[currentIndex])}</div>
+        <div className="h-screen w-screen flex flex-col">
+            <div className="flex h-[92%] w-full">
+                <div className="w-3/4 h-full overflow-hidden border-0 align-baseline list-none">
+                    {cache && cache.length > 0 && renderMidia(cache[currentIndex])}
+                </div>
+                <div className="w-1/4 h-full bg-dark-blue justify-center items-center">                    
+                    <div className="text-white">
+                        <div className="flex px-4 justify-between rounded-lg py-12 border-b text-6xl">
+                            <h2 className="animate-blink">{senhas[0].senha}</h2>
+                            <h2 className="animate-blink">{senhas[0].guiche}</h2>
+                        </div>
+                        <div className="px-8 flex w-full bg-dark-purple rounded-lg justify-between py-2 border-b text-xl">
+                            <h2>Senha</h2>
+                            <h2>Guichê</h2>
+                        </div>
+                        {senhas.map(senha => (
+                            <div className="flex px-8 justify-between py-5 rounded-lg border-b text-4xl">
+                                <h2>{senha.senha}</h2>
+                                <h2>{senha.guiche}</h2>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+            <Marquee/>
+        </div>
     );
 };
