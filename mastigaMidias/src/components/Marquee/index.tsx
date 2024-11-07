@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { MdOutlineWatchLater } from "react-icons/md";
-
+import { useEffect, useState } from "react";
 const Marquee = () => {
     const [time, setTime] = useState(new Date());
     const [temperature, setTemperature] = useState("");
     const [dollarRate, setDollarRate] = useState("5.00");
-    const [ varBidDollar, setVarBidDollar ] = useState(true) 
+    const [ varBidDollar, setVarBidDollar ] = useState(true)
     const [euroRate, setEuroRate] = useState("6.00");
-    const [ varBidEuro, setVarBidEuro ] = useState(true) 
+    const [ varBidEuro, setVarBidEuro ] = useState(true)
     const [noticias, setNoticias] = useState<string[]>([]);
 
 
@@ -16,15 +14,15 @@ const Marquee = () => {
             try {
                 const response = await fetch("https://economia.awesomeapi.com.br/json/last/USD-BRL");
                 const data = await response.json();
-                setDollarRate(data.USDBRL.bid); 
+                setDollarRate(data.USDBRL.bid);
                 if(data.USDBRL.varBid <= 0){
                     setVarBidDollar(false)
                 }
 
                 const responseEuro = await fetch("https://economia.awesomeapi.com.br/json/last/EUR-BRL");
                 const dataEuro = await responseEuro.json();
-                setEuroRate(dataEuro.EURBRL.bid); 
-                
+                setEuroRate(dataEuro.EURBRL.bid);
+
                 if(dataEuro.EURBRL.varBid <= 0){
                     setVarBidEuro(false)
                 }
@@ -35,7 +33,7 @@ const Marquee = () => {
                     const data = await response.json();
 
                     if (data && data.contents) {
-                        
+
                         const parser = new DOMParser();
                         const xml = parser.parseFromString(data.contents, "text/xml");
                         const items = xml.getElementsByTagName("item");
@@ -62,7 +60,7 @@ const Marquee = () => {
                     const data = await response.json();
 
                     console.log(data.current_weather.temperature)
-    
+
                     // Verifica se os dados foram recebidos corretamente
                     if (data && data.current_weather && data.current_weather.temperature) {
                         setTemperature(data.current_weather.temperature);
@@ -76,13 +74,13 @@ const Marquee = () => {
                 console.error("Erro ao buscar a cotação do dólar:", error);
             }
         };
-    
+
         // Atualiza a hora a cada segundo
         const timer = setInterval(() => setTime(new Date()), 1000);
-    
+
         // Chama a função de busca
         fetchDollar();
-    
+
         return () => clearInterval(timer); // Limpa o intervalo ao desmontar o componente
     }, []);
     useEffect(() => {

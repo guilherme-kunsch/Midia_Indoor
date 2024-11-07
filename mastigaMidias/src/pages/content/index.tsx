@@ -21,7 +21,7 @@ export const Content = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [cache, setCache] = useState<CacheInfo[] | null>(null);
 
-    const [senhas, setSenhas ] = useState([
+    const [senhas, _ ] = useState([
         {
             senha: "UCL001", guiche: "001"
         },
@@ -170,7 +170,7 @@ export const Content = () => {
                 <div className="w-3/4 h-full overflow-hidden border-0 align-baseline list-none">
                     {cache && cache.length > 0 && renderMidia(cache[currentIndex])}
                 </div>
-                <div className="w-1/4 h-full bg-dark-blue justify-center items-center">                    
+                <div className="w-1/4 h-full bg-dark-blue justify-center items-center">
                     <div className="text-white">
                         <div className="flex px-4 justify-between rounded-lg py-12 border-b text-6xl">
                             <h2 className="animate-blink">{senhas[0].senha}</h2>
