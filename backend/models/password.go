@@ -2,6 +2,6 @@ package models
 
 type (
 	Password struct {
-		Password int `json:"password" bson:"password"`
+		Password string `json:"password" bson:"password"`
 	}
 )
