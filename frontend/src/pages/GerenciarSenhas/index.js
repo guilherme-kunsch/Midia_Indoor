@@ -7,7 +7,6 @@ export default function GerenciarSenhas() {
   const [indexNormal, setIndexNormal] = useState(0);
   const [indexPreferencial, setIndexPreferencial] = useState(0);
 
-  // Chama a API para buscar as senhas
   useEffect(() => {
     const fetchSenhas = async () => {
       try {
