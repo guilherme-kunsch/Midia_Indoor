@@ -1,53 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SideBar from "../../components/SideBar";
 
 export default function GerenciarSenhas() {
-  const [numSenhasNormais, setNumSenhasNormais] = useState(1); // Quantidade de senhas normais no dia
-  const [numSenhasPreferenciais, setNumSenhasPreferenciais] = useState(1); // Quantidade de senhas preferenciais no dia
-  const [indexNormal, setIndexNormal] = useState(0); // Índice da senha normal atual
-  const [indexPreferencial, setIndexPreferencial] = useState(0); // Índice da senha preferencial atual
-  const [senhasNormais, setSenhasNormais] = useState(Array.from({ length: numSenhasNormais }, (_, i) => `${i}`)); // Senhas Normais
-  const [senhasPreferenciais, setSenhasPreferenciais] = useState(Array.from({ length: numSenhasPreferenciais }, (_, i) => `P${i}`)); // Senhas Preferenciais
+  const [senhasNormais, setSenhasNormais] = useState([]);
+  const [senhasPreferenciais, setSenhasPreferenciais] = useState([]);
+  const [indexNormal, setIndexNormal] = useState(0);
+  const [indexPreferencial, setIndexPreferencial] = useState(0);
 
-  const handleNumSenhasNormaisChange = (e) => {
-    const newNumSenhas = parseInt(e.target.value, 10);
-    if (newNumSenhas > 0) {
-      setNumSenhasNormais(newNumSenhas);
-      setSenhasNormais(Array.from({ length: newNumSenhas }, (_, i) => `${i}`));
-      setIndexNormal(0);
-    }
-  };
+  // Chama a API para buscar as senhas
+  useEffect(() => {
+    const fetchSenhas = async () => {
+      try {
+        const response = await fetch("https://mastigadores-api.onrender.com/password");
+        const data = await response.json();
+        setSenhasNormais(data.senhasNormais || []);
+        setSenhasPreferenciais(data.senhasPreferenciais || []);
+      } catch (error) {
+        console.error("Erro ao buscar senhas:", error);
+      }
+    };
 
-  const handleNumSenhasPreferenciaisChange = (e) => {
-    const newNumSenhas = parseInt(e.target.value, 10);
-    if (newNumSenhas > 0) {
-      setNumSenhasPreferenciais(newNumSenhas);
-      setSenhasPreferenciais(Array.from({ length: newNumSenhas }, (_, i) => `P${i}`));
-      setIndexPreferencial(0);
-    }
-  };
+    fetchSenhas();
+  }, []);
 
   const handlePreviousPassword = (isPreferencial) => {
     if (isPreferencial) {
-      if (indexPreferencial > 0) {
-        setIndexPreferencial(indexPreferencial - 1);
-      }
+      if (indexPreferencial > 0) setIndexPreferencial(indexPreferencial - 1);
     } else {
-      if (indexNormal > 0) {
-        setIndexNormal(indexNormal - 1);
-      }
+      if (indexNormal > 0) setIndexNormal(indexNormal - 1);
     }
   };
 
   const handleNextPassword = (isPreferencial) => {
     if (isPreferencial) {
-      if (indexPreferencial < senhasPreferenciais.length - 1) {
+      if (indexPreferencial < senhasPreferenciais.length - 1)
         setIndexPreferencial(indexPreferencial + 1);
-      }
     } else {
-      if (indexNormal < senhasNormais.length - 1) {
+      if (indexNormal < senhasNormais.length - 1)
         setIndexNormal(indexNormal + 1);
-      }
     }
   };
 
@@ -61,7 +51,6 @@ export default function GerenciarSenhas() {
       <SideBar title={"GERENCIAR SENHAS"} />
 
       <div className="mx-80 mt-24 space-y-8 justify-center text-center">
-
         {/* Senha Normal */}
         <div className="w-full h-70 bg-gray-200 py-8 px-20 rounded-lg">
           <h1 className="text-black mb-4 text-3xl font-bold">Senha Normal</h1>
@@ -75,13 +64,15 @@ export default function GerenciarSenhas() {
             <div className="flex flex-col items-center">
               <p className="text-black font-bold">Senha Atual</p>
               <h3 className="text-black font-bo text-center w-full bg-gray-300 p-4 rounded-lg">
-                {senhasNormais[indexNormal]}
+                {senhasNormais[indexNormal] || "N/A"}
               </h3>
             </div>
             <div className="flex flex-col items-center">
               <p className="text-black font-bold">Próxima Senha</p>
               <h3 className="text-black font-bo text-center w-full bg-gray-300 p-4 rounded-lg">
-                {indexNormal < senhasNormais.length - 1 ? senhasNormais[indexNormal + 1] : "N/A"}
+                {indexNormal < senhasNormais.length - 1
+                  ? senhasNormais[indexNormal + 1]
+                  : "N/A"}
               </h3>
             </div>
           </div>
@@ -109,24 +100,30 @@ export default function GerenciarSenhas() {
 
         {/* Senha Preferencial */}
         <div className="w-full h-70 bg-gray-200 py-8 px-20 rounded-lg">
-          <h1 className="text-black mb-4 text-3xl font-bold">Senha Preferencial</h1>
+          <h1 className="text-black mb-4 text-3xl font-bold">
+            Senha Preferencial
+          </h1>
           <div className="grid grid-cols-3 gap-8 mb-8 border">
             <div className="flex flex-col items-center">
               <p className="text-black font-bold">Senha Anterior</p>
               <h3 className="text-black font-bo text-center w-full bg-gray-300 p-4 rounded-lg">
-                {indexPreferencial > 0 ? senhasPreferenciais[indexPreferencial - 1] : "N/A"}
+                {indexPreferencial > 0
+                  ? senhasPreferenciais[indexPreferencial - 1]
+                  : "N/A"}
               </h3>
             </div>
             <div className="flex flex-col items-center">
               <p className="text-black font-bold">Senha Atual</p>
               <h3 className="text-black font-bo text-center w-full bg-gray-300 p-4 rounded-lg">
-                {senhasPreferenciais[indexPreferencial]}
+                {senhasPreferenciais[indexPreferencial] || "N/A"}
               </h3>
             </div>
             <div className="flex flex-col items-center">
               <p className="text-black font-bold">Próxima Senha</p>
               <h3 className="text-black font-bo text-center w-full bg-gray-300 p-4 rounded-lg">
-                {indexPreferencial < senhasPreferenciais.length - 1 ? senhasPreferenciais[indexPreferencial + 1] : "N/A"}
+                {indexPreferencial < senhasPreferenciais.length - 1
+                  ? senhasPreferenciais[indexPreferencial + 1]
+                  : "N/A"}
               </h3>
             </div>
           </div>
@@ -151,32 +148,6 @@ export default function GerenciarSenhas() {
             </button>
           </div>
         </div>
-
-        {/* Configurar Senhas */}
-        <div className="w-full h-70 bg-gray-200 py-8 px-20 rounded-lg mt-8">
-          <h1 className="text-black mb-4 text-3xl font-bold">Configurar Senhas</h1>
-          <div className="flex justify-center mb-8 space-x-8">
-            <div className="flex flex-col items-center">
-              <label className="text-black font-bold mb-2">Quantidade de Senhas Normais:</label>
-              <input
-                type="number"
-                value={numSenhasNormais}
-                onChange={handleNumSenhasNormaisChange}
-                className="w-16 p-2 text-center border rounded"
-              />
-            </div>
-            <div className="flex flex-col items-center">
-              <label className="text-black font-bold mb-2">Quantidade de Senhas Preferenciais:</label>
-              <input
-                type="number"
-                value={numSenhasPreferenciais}
-                onChange={handleNumSenhasPreferenciaisChange}
-                className="w-16 p-2 text-center border rounded"
-              />
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
   );
