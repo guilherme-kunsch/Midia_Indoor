@@ -21,7 +21,7 @@ func SavePassword(c echo.Context) error {
 		return utils.ResponseError(c, http.StatusInternalServerError, "Erro ao salvar a senha: "+err.Error())
 	}
 
-	service.SendMessage(id, "password")
+	service.SendMessage("password", "password")
 
 	return c.JSON(http.StatusCreated, savedPassword)
 }
