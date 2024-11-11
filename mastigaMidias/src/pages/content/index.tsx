@@ -8,6 +8,7 @@ import { fillCache, updateCache } from "@/utils/cache";
 import { FILETYPES } from "@/types/playlist";
 import TextView from "@/components/TextView";
 import Marquee from "@/components/Marquee";
+import alerta from '../../assets/alerta.mp3'
 
 export const Content = () => {
     const navigate = useNavigate()
@@ -39,6 +40,7 @@ export const Content = () => {
         },
     ])
 
+
     if(!playlistId) return <>Loading...</>
     useEffect(() => {
         const fetchCache = async () => {
@@ -52,13 +54,13 @@ export const Content = () => {
         if (topic === playlistId) {
             const msg = message.toString()
             if (msg === "update") {
-               setCache(await updateCache(topic))
-            }
-            if (msg === "delete") {
-                navigate("/")
-            }
-            if (msg === "password"){
-                alert("SENHA ATUALIZADA")
+                const newCache = await updateCache(topic);
+                setCache(newCache);
+            } else if (msg === "delete") {
+                navigate("/");
+            } else if (msg === "password") {
+                const audio = new Audio(alerta);
+                audio.play().catch((error) => console.error("Erro ao reproduzir o áudio:", error));
             }
         }
         if (topic === deviceId) {
