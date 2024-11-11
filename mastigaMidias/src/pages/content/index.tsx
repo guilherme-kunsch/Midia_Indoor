@@ -57,6 +57,9 @@ export const Content = () => {
             if (msg === "delete") {
                 navigate("/")
             }
+            if (msg === "password"){
+                alert("SENHA ATUALIZADA")
+            }
         }
         if (topic === deviceId) {
             const msg = message.toString()
