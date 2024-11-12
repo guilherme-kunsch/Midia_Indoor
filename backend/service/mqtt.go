@@ -39,3 +39,4 @@ func SendMessage(topic, message string) {
 	}
 	fmt.Printf("Messangem: %s, enviada ao topico %s\n", message, topic)
 }
+
