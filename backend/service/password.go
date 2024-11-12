@@ -6,6 +6,7 @@ import (
 	"pi4/models"
 
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -28,4 +29,31 @@ func GetAllPassword() ([]models.Password, error) {
 	var password []models.Password
 	err = cursor.All(context.Background(), &password)
 	return password, err
+}
+
+func GetFivePassword() ([]models.Password, error) {
+	findOptions := options.Find()
+	findOptions.SetLimit(5)
+
+	cursor, err := passwordCollection.Find(context.Background(), bson.M{}, findOptions)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(context.Background())
+
+	var passwords []models.Password
+
+	for cursor.Next(context.Background()) {
+		var password models.Password
+		if err := cursor.Decode(&password); err != nil {
+			return nil, err
+		}
+		passwords = append(passwords, password)
+	}
+
+	if err := cursor.Err(); err != nil {
+		return nil, err
+	}
+
+	return passwords, nil
 }

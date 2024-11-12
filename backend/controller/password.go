@@ -21,14 +21,19 @@ func SavePassword(c echo.Context) error {
 		return utils.ResponseError(c, http.StatusInternalServerError, "Erro ao salvar a senha: "+err.Error())
 	}
 
-	service.SendMessage(id, "password")
-
 	return c.JSON(http.StatusCreated, savedPassword)
 }
 
-
 func GetAllPassword(c echo.Context) error {
 	passwords, err := service.GetAllPassword()
+	if err != nil {
+		return utils.ResponseError(c, http.StatusBadRequest, "Error ao buscar todas as senhas")
+	}
+	return c.JSON(http.StatusOK, passwords)
+}
+
+func GetFivePassword(c echo.Context) error {
+	passwords, err := service.GetFivePassword()
 	if err != nil {
 		return utils.ResponseError(c, http.StatusBadRequest, "Error ao buscar todas as senhas")
 	}
