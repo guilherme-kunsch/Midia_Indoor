@@ -35,7 +35,7 @@ func GetAllPassword() ([]models.Password, error) {
 }
 
 func GetFivePassword() ([]models.Password, error) {
-	findOptions := options.Find()
+  findOptions := options.Find().SetSort(bson.M{"created_at": -1})
 	findOptions.SetLimit(5)
 
 	cursor, err := passwordCollection.Find(context.Background(), bson.M{}, findOptions)
