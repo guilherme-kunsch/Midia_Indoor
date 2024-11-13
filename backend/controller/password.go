@@ -41,3 +41,12 @@ func GetFivePassword(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, passwords)
 }
+
+func GetCurrentPasswordHandler(c echo.Context) error {
+	currentPassword, err := service.GetCurrentPassword()
+	if err != nil {
+		return utils.ResponseError(c, http.StatusInternalServerError, "Erro ao buscar a senha atual: "+err.Error())
+	}
+
+	return c.JSON(http.StatusOK, currentPassword)
+}
