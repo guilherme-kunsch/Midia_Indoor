@@ -20,9 +20,6 @@ func init() {
 	opts.OnConnect = func(c mqtt.Client) {
 		fmt.Println("Connected")
 	}
-	opts.OnConnectionLost = func(c mqtt.Client, err error) {
-		fmt.Printf("Connection Lost: %s", err.Error())
-	}
 	client := mqtt.NewClient(opts)
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
 		fmt.Println(token.Error())
@@ -39,4 +36,3 @@ func SendMessage(topic, message string) {
 	}
 	fmt.Printf("Messangem: %s, enviada ao topico %s\n", message, topic)
 }
-
