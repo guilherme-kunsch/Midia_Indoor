@@ -58,12 +58,9 @@ export const Content = () => {
                 setCache(newCache);
             } else if (msg === "delete") {
                 navigate("/");
-            } else if (msg === "password") {
-                const audio = new Audio(alerta);
-                audio.play().catch((error) => console.error("Erro ao reproduzir o áudio:", error));
             }
         }
-        if (topic === deviceId) {
+        else if (topic === deviceId) {
             const msg = message.toString()
             if (msg === "delete") {
                 navigate("/")
@@ -84,6 +81,14 @@ export const Content = () => {
                 }
             }
 
+        }
+        else if (topic === "password"){
+            const msg = message.toString()
+
+            if (msg === "ping") {
+                const audio = new Audio(alerta);
+                audio.play().catch((error) => console.error("Erro ao reproduzir o áudio:", error));
+            }
         }
     }
     useEffect(() => {
