@@ -96,7 +96,7 @@ export const Content = () => {
         client.on("error", console.error)
         client.on('connect', () => {
             console.log("conneted")
-            client.subscribe([playlistId!, deviceId!])
+            client.subscribe([playlistId!, deviceId!, "password"])
         })
 
         client.on("message", onMessage)
