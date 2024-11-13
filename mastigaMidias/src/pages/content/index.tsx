@@ -16,29 +16,42 @@ export const Content = () => {
     const MQTT_URL = import.meta.env.VITE_MQTT_URL;
     const MQTT_USER = import.meta.env.VITE_MQTT_USER;
     const MQTT_PASSWORD = import.meta.env.VITE_MQTT_PASSWORD;
+    const VITE_API_URL = import.meta.env.VITE_API_URL;
     const { search } = useLocation();
     const queryParams = new URLSearchParams(search);
     const deviceId = queryParams.get("device");
     const [currentIndex, setCurrentIndex] = useState(0);
     const [cache, setCache] = useState<CacheInfo[] | null>(null);
 
-    const [senhas, _ ] = useState([
+    const [ senhaAtual, setSenhaAtual] = useState([
         {
-            senha: "UCL001", guiche: "001"
-        },
-        {
-            senha: "UCL002", guiche: "002"
-        },
-        {
-            senha: "UCL003", guiche: "003"
-        },
-        {
-            senha: "UCL004", guiche: "004"
-        },
-        {
-            senha: "UCL005", guiche: "005"
-        },
+            password: "UCL001"
+        }
     ])
+
+    const [senhas, setSenhas ] = useState([
+        {
+            password: "UCL001"
+        }
+    ])
+
+    async function atualizaSenhas() {
+        try {
+            const response = await fetch(`${VITE_API_URL}/password/cinco`, {
+                method: "GET"
+            });
+            const responseAtual = await fetch(`${VITE_API_URL}/password/atual`, {
+                method: "GET"
+            });
+            const data = await response.json();
+            const dataAtual = await responseAtual.json();
+            setSenhas(data)
+            setSenhaAtual(dataAtual)
+            console.log("atualizou")
+        } catch (error) {
+            console.error("Erro ao buscar as senhas:", error);
+        }
+    }
 
 
     if(!playlistId) return <>Loading...</>
@@ -46,6 +59,7 @@ export const Content = () => {
         const fetchCache = async () => {
             const playlist = await fetchPlaylistFromAPI(playlistId);
             const fetchedCache = await fillCache(playlist);
+            atualizaSenhas()
             setCache(fetchedCache);
         };
         fetchCache();
@@ -87,6 +101,7 @@ export const Content = () => {
 
             if (msg === "ping") {
                 const audio = new Audio(alerta);
+                atualizaSenhas()
                 audio.play().catch((error) => console.error("Erro ao reproduzir o áudio:", error));
             }
         }
@@ -183,17 +198,14 @@ export const Content = () => {
                 <div className="w-1/4 h-full bg-dark-blue justify-center items-center">
                     <div className="text-white">
                         <div className="flex px-4 justify-between rounded-lg py-12 border-b text-6xl">
-                            <h2 className="animate-blink">{senhas[0].senha}</h2>
-                            <h2 className="animate-blink">{senhas[0].guiche}</h2>
+                            <h2 className="animate-blink">{senhaAtual[0].password}</h2>
                         </div>
                         <div className="px-8 flex w-full bg-dark-purple rounded-lg justify-between py-2 border-b text-xl">
                             <h2>Senha</h2>
-                            <h2>Guichê</h2>
                         </div>
                         {senhas.map(senha => (
                             <div className="flex px-8 justify-between py-5 rounded-lg border-b text-4xl">
-                                <h2>{senha.senha}</h2>
-                                <h2>{senha.guiche}</h2>
+                                <h2>{senha.password}</h2>
                             </div>
                         ))}
                     </div>
