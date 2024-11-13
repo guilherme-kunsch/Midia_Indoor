@@ -21,11 +21,10 @@ func SavePassword(c echo.Context) error {
 		return utils.ResponseError(c, http.StatusInternalServerError, "Erro ao salvar a senha: "+err.Error())
 	}
 
-	service.SendMessage(id, "password")
+	service.SendMessage("password", "ping")
 
 	return c.JSON(http.StatusCreated, savedPassword)
 }
-
 
 func GetAllPassword(c echo.Context) error {
 	passwords, err := service.GetAllPassword()
