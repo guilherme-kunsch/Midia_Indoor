@@ -48,5 +48,8 @@ func AddRoutes(e *echo.Echo) {
 	{
 		password.GET("", controller.GetAllPassword)
 		password.POST("", controller.SavePassword)
+		password.GET("/cinco", controller.GetFivePassword)
+		password.GET("/atual", controller.GetCurrentPasswordHandler)
+
 	}
 }
