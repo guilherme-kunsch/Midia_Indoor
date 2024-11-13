@@ -7,6 +7,9 @@ export default function GerenciarSenhas() {
   const [indexNormal, setIndexNormal] = useState(0);
   const [indexPreferencial, setIndexPreferencial] = useState(0);
 
+  const [ senhaAtualP, setSenhaAtualP] = useState("")
+  const [ senhaAtualN, setSenhaAtualN] = useState("")
+
   useEffect(() => {
     const fetchSenhas = async () => {
       try {
@@ -64,27 +67,13 @@ export default function GerenciarSenhas() {
 
         <div className="w-full h-70 bg-gray-200 py-8 px-20 rounded-lg">
           <h1 className="text-black mb-4 text-3xl font-bold">Senha Normal</h1>
-          <div className="grid grid-cols-3 gap-8 mb-8 border">
-            <div className="flex flex-col items-center">
-              <p className="text-black font-bold">Senha Anterior</p>
-              <h3 className="text-black font-bold text-center w-full bg-gray-300 p-4 rounded-lg">
-                {indexNormal > 0 ? senhasNormais[indexNormal - 1].password : "N/A"}
-              </h3>
-            </div>
-            <div className="flex flex-col items-center">
+          <div className="mb-8 border">
+            <div className="flex flex-col justify-center items-center">
               <p className="text-black font-bold">Senha Atual</p>
-              <h3 className="text-black font-bold text-center w-full bg-gray-300 p-4 rounded-lg">
+              <h3 className="text-black font-bold justify-center text-center w-full bg-gray-300 p-4 rounded-lg">
                 {senhasNormais[indexNormal]?.password || "N/A"}
               </h3>
-            </div>
-            <div className="flex flex-col items-center">
-              <p className="text-black font-bold">Próxima Senha</p>
-              <h3 className="text-black font-bold text-center w-full bg-gray-300 p-4 rounded-lg">
-                {indexNormal < senhasNormais.length - 1
-                  ? senhasNormais[indexNormal + 1].password
-                  : "N/A"}
-              </h3>
-            </div>
+            </div>            
           </div>
           <div className="flex justify-between mt-8">
             <button
@@ -112,29 +101,15 @@ export default function GerenciarSenhas() {
           <h1 className="text-black mb-4 text-3xl font-bold">
             Senha Preferencial
           </h1>
-          <div className="grid grid-cols-3 gap-8 mb-8 border">
-            <div className="flex flex-col items-center">
-              <p className="text-black font-bold">Senha Anterior</p>
-              <h3 className="text-black font-bold text-center w-full bg-gray-300 p-4 rounded-lg">
-                {indexPreferencial > 0
-                  ? senhasPreferenciais[indexPreferencial - 1].password
-                  : "N/A"}
-              </h3>
-            </div>
+          <div className="mb-8 border">
+           
             <div className="flex flex-col items-center">
               <p className="text-black font-bold">Senha Atual</p>
               <h3 className="text-black font-bold text-center w-full bg-gray-300 p-4 rounded-lg">
                 {senhasPreferenciais[indexPreferencial]?.password || "N/A"}
               </h3>
             </div>
-            <div className="flex flex-col items-center">
-              <p className="text-black font-bold">Próxima Senha</p>
-              <h3 className="text-black font-bold text-center w-full bg-gray-300 p-4 rounded-lg">
-                {indexPreferencial < senhasPreferenciais.length - 1
-                  ? senhasPreferenciais[indexPreferencial + 1].password
-                  : "N/A"}
-              </h3>
-            </div>
+            
           </div>
           <div className="flex justify-between mt-8">
             <button

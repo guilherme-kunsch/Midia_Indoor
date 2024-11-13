@@ -3,6 +3,8 @@ import Popup from "reactjs-popup";
 
 import Preview from "../../../components/Preview";
 import api from "../../../api/api";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function PopUpEditPlaylist({ setShowPopUpEdit, playlist }) {
     const [titlePlayList, setTitlePlaylist] = useState(playlist.name)
@@ -37,13 +39,15 @@ export default function PopUpEditPlaylist({ setShowPopUpEdit, playlist }) {
             }
             const response = await api.patch(`/playlist/${playlist.id}`, data)
             if (response.status === 200) {
-                alert("PlayList atualizada com sucesso!")
-                window.location.reload()
+                toast.success("PlayList atualizada com sucesso!")
+                setTimeout(() => {
+                    window.location.reload();
+                }, 3000);
             }
 
 
         } catch (error) {
-            alert('Erro ao cadastrar playlist, procure os mastigadores.')
+            toast.error('Erro ao cadastrar playlist, procure os mastigadores.')
             console.error(error.message)
         }
     }
@@ -67,8 +71,10 @@ export default function PopUpEditPlaylist({ setShowPopUpEdit, playlist }) {
     const deletePlaylist = async () => {
         const response = await api.delete(`/playlist/${playlist.id}`)
         if (response.status === 204) {
-            alert("PlayList deletada com sucesso!")
-            window.location.reload()
+            toast.success("PlayList deletada com sucesso!")
+            setTimeout(() => {
+                window.location.reload();
+            }, 3000);
         }
     }
     useEffect(() => {
@@ -159,7 +165,7 @@ export default function PopUpEditPlaylist({ setShowPopUpEdit, playlist }) {
                 </div>
                 {previewModal && <Preview midia={selectedPreviewMidia} closePreviewModal={closePreviewModal} />}
             </Popup>
-
+            <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
         </div>
     );
 }
