@@ -23,11 +23,7 @@ export const Content = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [cache, setCache] = useState<CacheInfo[] | null>(null);
 
-    const [ senhaAtual, setSenhaAtual] = useState([
-        {
-            password: "UCL001"
-        }
-    ])
+    const [ senhaAtual, setSenhaAtual] = useState("UCL001")
 
     const [senhas, setSenhas ] = useState([
         {
@@ -44,10 +40,10 @@ export const Content = () => {
                 method: "GET"
             });
             const data = await response.json();
-            const dataAtual = await responseAtual.json();
+            let dataAtual = await responseAtual.json();
             setSenhas(data)
-            setSenhaAtual(dataAtual)
-            console.log("atualizou")
+            setSenhaAtual(dataAtual.password)
+            console.log(dataAtual.password)
         } catch (error) {
             console.error("Erro ao buscar as senhas:", error);
         }
@@ -191,20 +187,23 @@ export const Content = () => {
     }
     return (
         <div className="h-screen w-screen flex flex-col">
-            <div className="flex h-[92%] w-full">
+            <div className="flex h-[90%] w-full">
                 <div className="w-3/4 h-full overflow-hidden border-0 align-baseline list-none">
                     {cache && cache.length > 0 && renderMidia(cache[currentIndex])}
                 </div>
                 <div className="w-1/4 h-full bg-dark-blue justify-center items-center">
                     <div className="text-white">
-                        <div className="flex px-4 justify-between rounded-lg py-12 border-b text-6xl">
-                            <h2 className="animate-blink">{senhaAtual[0].password}</h2>
+                        <div className="px-8 flex w-full bg-dark-purple justify-center py-2 border-t text-xl">
+                            <h2>Senha Atual</h2>
                         </div>
-                        <div className="px-8 flex w-full bg-dark-purple rounded-lg justify-between py-2 border-b text-xl">
-                            <h2>Senha</h2>
+                        <div className="flex text-center justify-center py-12 border-t text-6xl">
+                            <h2 className="animate-blink">{senhaAtual}</h2>
+                        </div>
+                        <div className="px-8 flex w-full bg-dark-purple justify-center py-2 border-t text-xl">
+                            <h2>Últimas Senha</h2>
                         </div>
                         {senhas.map(senha => (
-                            <div className="flex px-8 justify-between py-5 rounded-lg border-b text-4xl">
+                            <div className="flex px-8 justify-center py-5 border-t text-3xl">
                                 <h2>{senha.password}</h2>
                             </div>
                         ))}
