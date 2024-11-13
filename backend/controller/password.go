@@ -21,7 +21,7 @@ func SavePassword(c echo.Context) error {
 		return utils.ResponseError(c, http.StatusInternalServerError, "Erro ao salvar a senha: "+err.Error())
 	}
 
-	service.SendMessage("password", "password")
+	service.SendMessage("password", "ping")
 
 	return c.JSON(http.StatusCreated, savedPassword)
 }
@@ -40,4 +40,13 @@ func GetFivePassword(c echo.Context) error {
 		return utils.ResponseError(c, http.StatusBadRequest, "Error ao buscar todas as senhas")
 	}
 	return c.JSON(http.StatusOK, passwords)
+}
+
+func GetCurrentPasswordHandler(c echo.Context) error {
+	currentPassword, err := service.GetCurrentPassword()
+	if err != nil {
+		return utils.ResponseError(c, http.StatusInternalServerError, "Erro ao buscar a senha atual: "+err.Error())
+	}
+
+	return c.JSON(http.StatusOK, currentPassword)
 }

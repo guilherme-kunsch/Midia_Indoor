@@ -4,6 +4,7 @@ import (
 	"context"
 	"pi4/database"
 	"pi4/models"
+	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -13,6 +14,8 @@ import (
 var passwordCollection *mongo.Collection = database.GetCollection(database.MongoDB, "password")
 
 func SavePassword(password models.Password) (models.Password, error) {
+	password.CreatedAt = time.Now() // Adiciona a data e hora atual
+
 	_, err := passwordCollection.InsertOne(context.Background(), password)
 	if err != nil {
 		return models.Password{}, err
@@ -56,4 +59,20 @@ func GetFivePassword() ([]models.Password, error) {
 	}
 
 	return passwords, nil
+}
+
+func GetCurrentPassword() (models.Password, error) {
+	var password models.Password
+
+	err := passwordCollection.FindOne(
+		context.Background(),
+		bson.M{},
+		options.FindOne().SetSort(bson.M{"createdAt": -1}),
+	).Decode(&password)
+
+	if err != nil {
+		return models.Password{}, err
+	}
+
+	return password, nil
 }
