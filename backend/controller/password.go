@@ -50,3 +50,10 @@ func GetCurrentPasswordHandler(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, currentPassword)
 }
+
+func ResetPasswords(c echo.Context) error {
+  if err := service.ResetPassword(); err != nil {
+    return utils.ResponseError(c, http.StatusBadRequest, "Erro ao resetar senhas")
+  }
+  return c.JSON(http.StatusOK, nil)
+}

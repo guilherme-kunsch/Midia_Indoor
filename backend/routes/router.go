@@ -50,6 +50,6 @@ func AddRoutes(e *echo.Echo) {
 		password.POST("", controller.SavePassword)
 		password.GET("/cinco", controller.GetFivePassword)
 		password.GET("/atual", controller.GetCurrentPasswordHandler)
-
+    password.DELETE("/reset", controller.ResetPasswords)
 	}
 }
