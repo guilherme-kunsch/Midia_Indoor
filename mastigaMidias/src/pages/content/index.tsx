@@ -9,6 +9,7 @@ import { FILETYPES } from "@/types/playlist";
 import TextView from "@/components/TextView";
 import Marquee from "@/components/Marquee";
 import alerta from '../../assets/alerta.mp3'
+import { Password } from "@/types/password";
 
 export const Content = () => {
     const navigate = useNavigate()
@@ -23,13 +24,9 @@ export const Content = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [cache, setCache] = useState<CacheInfo[] | null>(null);
 
-    const [ senhaAtual, setSenhaAtual] = useState("UCL001")
+    const [ senhaAtual, setSenhaAtual] = useState<string>("N/A")
 
-    const [senhas, setSenhas ] = useState([
-        {
-            password: "UCL001"
-        }
-    ])
+    const [senhas, setSenhas ] = useState<Password[]>([])
 
     async function atualizaSenhas() {
         try {
@@ -43,17 +40,18 @@ export const Content = () => {
             let dataAtual = await responseAtual.json();
             setSenhas(data)
             setSenhaAtual(dataAtual.password)
-            console.log(dataAtual.password)
         } catch (error) {
             console.error("Erro ao buscar as senhas:", error);
         }
     }
 
-
     if(!playlistId) return <>Loading...</>
+    if(!senhaAtual) return <>Loading...</>
+    if(!senhas) return <>Loading...</>
+
     useEffect(() => {
         const fetchCache = async () => {
-            const playlist = await fetchPlaylistFromAPI(playlistId);
+            const playlist = await fetchPlaylistFromAPI(playlistId!);
             const fetchedCache = await fillCache(playlist);
             atualizaSenhas()
             setCache(fetchedCache);
@@ -185,6 +183,7 @@ export const Content = () => {
 
         }
     }
+    console.log(senhaAtual)
     return (
         <div className="h-screen w-screen flex flex-col">
             <div className="flex h-[90%] w-full">
@@ -202,7 +201,7 @@ export const Content = () => {
                         <div className="px-8 flex w-full bg-dark-purple justify-center py-2 border-t text-xl">
                             <h2>Últimas Senha</h2>
                         </div>
-                        {senhas.map(senha => (
+                        {senhas && senhas.map(senha => (
                             <div className="flex px-8 justify-center py-5 border-t text-3xl">
                                 <h2>{senha.password}</h2>
                             </div>
