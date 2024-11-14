@@ -128,7 +128,11 @@ export default function PopUpNovaPlaylist({ setShowPopUp }) {
                                                     key={index}
                                                     className="flex text-start my-2 py-1 px-2 hover:bg-dark-blue hover:text-white rounded-lg justify-between"
                                                 >
-                                                    <span className="text-sm">{midia.file_original_name}</span>
+                                                    <span className="text-sm">
+                                                        {midia.file_original_name.length > 20
+                                                            ? `${midia.file_original_name.substring(0, 20)}...`
+                                                            : midia.file_original_name}
+                                                    </span>
                                                     <button type="button" className="text-sm w-20 rounded-lg bg-red-500" onClick={() => removeMedia(midia)}>Remover</button>
                                                 </div>
                                             ))}
