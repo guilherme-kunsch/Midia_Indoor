@@ -48,5 +48,4 @@ func DeleteMidia(id string) error {
 		SendMessage(id, "update")
 	}
 	return nil
-
 }

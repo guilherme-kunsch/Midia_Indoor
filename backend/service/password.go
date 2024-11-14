@@ -85,8 +85,8 @@ func SavePassword(operator, passwordType string) (models.Password, error) {
 	return password, nil
 }
 
-func GetAllPassword() ([]models.Password, error) {
-	cursor, err := passwordCollection.Find(context.Background(), bson.M{})
+func GetAllPassword(passwordType string) ([]models.Password, error) {
+	cursor, err := passwordCollection.Find(context.Background(), bson.M{"type": passwordType})
 	if err != nil {
 		return nil, err
 	}
@@ -122,12 +122,15 @@ func GetFivePassword() ([]models.Password, error) {
 	return passwords, nil
 }
 
-func GetCurrentPassword() (models.Password, error) {
+func GetCurrentPassword(passwordType string) (models.Password, error) {
 	var password models.Password
-
+	filter := bson.M{}
+	if passwordType != "" {
+		filter["type"] = passwordType
+	}
 	err := passwordCollection.FindOne(
 		context.Background(),
-		bson.M{},
+		filter,
 		options.FindOne().SetSort(bson.M{"createdAt": -1}),
 	).Decode(&password)
 
@@ -138,7 +141,11 @@ func GetCurrentPassword() (models.Password, error) {
 	return password, nil
 }
 
-func ResetPassword() error {
-	_, err := passwordCollection.DeleteMany(context.Background(), bson.M{})
+func ResetPassword(passwordType string) error {
+	filter := bson.M{}
+	if passwordType != "" {
+		filter["type"] = passwordType
+	}
+	_, err := passwordCollection.DeleteMany(context.Background(), filter)
 	return err
 }
