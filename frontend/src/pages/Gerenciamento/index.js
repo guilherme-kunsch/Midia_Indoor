@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import SideBar from "../../components/SideBar";
 import { useNavigate } from "react-router-dom";
@@ -19,10 +20,17 @@ export default function Gerenciamento() {
   };
 
   const handleDurationChange = (id, value) => {
-    setDuracoes((prev) => ({
-      ...prev,
-      [id]: value * 1000, // Converte segundos para milissegundos
-    }));
+    const durationInMs = value * 1000;
+    setDuracoes((prev) => ({ ...prev, [id]: durationInMs }));
+    saveDuration(id, durationInMs);
+  };
+
+  const saveDuration = async (id, duration) => {
+    try {
+      await api.put(`/midia/${id}/duracao`, { duration }); // faz o envio da duração para a API 
+    } catch (error) {
+      console.error("Erro ao salvar duração:", error);
+    }
   };
 
   const handleDelete = async (id) => {
@@ -34,48 +42,28 @@ export default function Gerenciamento() {
   };
 
   const fetchData = async () => {
-    const response = await api.get("/midia");
-    setMidias(response.data);
+    try {
+      const response = await api.get("/midia");
+      if (response && response.data) {
+        setMidias(response.data);
 
-    // Inicializa as durações com valor padrão (1000ms)
-    const initialDurations = response.data.reduce((acc, midia) => {
-      acc[midia.id] = 1000; // 1 segundo padrão
-      return acc;
-    }, {});
-    setDuracoes(initialDurations);
+
+        const initialDurations = response.data.reduce((acc, midia) => {
+          acc[midia.id] = midia.duration || 5000;
+          return acc;
+        }, {});
+        setDuracoes(initialDurations);
+      } else {
+        console.error("Erro: 'data' está ausente na resposta da API.");
+      }
+    } catch (error) {
+      console.error("Erro ao buscar dados:", error);
+    }
   };
 
   useEffect(() => {
     fetchData();
   }, []);
-
-  const renderMidia = (midia) => {
-    switch (midia.file_type) {
-      case "image":
-        return (
-          <img
-            className="max-h-60"
-            src={midia.file_url}
-            alt="logo"
-            onClick={() => handleImagemClick(midia.file_url)}
-          />
-        );
-      case "video":
-        return (
-          <video className="max-h-60" controls>
-            <source src={midia.file_url} type="video/mp4" />
-          </video>
-        );
-      case "text":
-        return (
-          <div className="max-h-60 text-black">
-            <TextView id={midia.id} />
-          </div>
-        );
-      default:
-        return <></>;
-    }
-  };
 
   return (
     <div className="w-full">
@@ -102,10 +90,7 @@ export default function Gerenciamento() {
 
       <div className="pl-40 w-full grid grid-cols-2">
         {midias.map((midia, index) => (
-          <div
-            key={index}
-            className="w-9/12 h-70 mb-9 bg-gray-200 rounded-lg"
-          >
+          <div key={index} className="w-9/12 h-70 mb-9 bg-gray-200 rounded-lg">
             <div className="justify-center text-center flex bg-dark-blue p-4 rounded-t-lg">
               <TiDelete
                 size={22}
@@ -113,13 +98,26 @@ export default function Gerenciamento() {
                 className="cursor-pointer"
                 onClick={() => handleDelete(midia.id)}
               />
-              <h1 className="text-white w-full mr-6">
-                {midia.file_original_name}
-              </h1>
+              <h1 className="text-white w-full mr-6">{midia.file_original_name}</h1>
             </div>
 
             <div className="h-60 justify-center flex text-center m-auto items-center">
-              {renderMidia(midia)}
+              {midia.file_type === "image" ? (
+                <img
+                  className="max-h-60"
+                  src={midia.file_url}
+                  alt="logo"
+                  onClick={() => handleImagemClick(midia.file_url)}
+                />
+              ) : midia.file_type === "video" ? (
+                <video className="max-h-60" controls autoPlay>
+                  <source src={midia.file_url} type="video/mp4" />
+                </video>
+              ) : (
+                <div className="max-h-60 text-black">
+                  <TextView id={midia.id} />
+                </div>
+              )}
             </div>
             <div className="flex justify-center mt-4">
               <label className="mr-2 text-slate-900">Duração (s):</label>
@@ -130,7 +128,8 @@ export default function Gerenciamento() {
                 onChange={(e) => handleDurationChange(midia.id, e.target.value)}
                 className="w-16 border mb-3 border-slate-900 rounded-md text-center"
               />
-            </div>          </div>
+            </div>
+          </div>
         ))}
       </div>
 

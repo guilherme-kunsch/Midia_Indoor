@@ -103,11 +103,14 @@ export default function PopUpEditPlaylist({ setShowPopUpEdit, playlist }) {
                                                     className="flex text-start my-2 py-1 px-2 hover:bg-dark-blue hover:text-white rounded-lg justify-between"
                                                 >
                                                     <span className="text-sm">{midia.file_original_name}</span>
-                                                    <button className="text-sm w-20 bg-blue-500 rounded-lg" type="button" onClick={() => openPreviewModal(midia)}>Preview</button>
-                                                    <button className="text-sm w-20 bg-green-500 rounded-lg" type="button" onClick={() => {
-                                                        setSelectedMidia(state => [...state, midia])
-                                                        setMidias(midias.filter(m => m.id !== midia.id))
-                                                    }}>Selecionar</button>
+                                                    <div className="flex justify-center gap-3">
+                                                        <button className="text-sm w-20 bg-blue-500 rounded-lg " type="button" onClick={() => openPreviewModal(midia)}>Preview</button>
+                                                        <button className="text-sm w-20 bg-green-500 rounded-lg" type="button" onClick={() => {
+                                                            setSelectedMidia(state => [...state, midia])
+                                                            setMidias(midias.filter(m => m.id !== midia.id))
+                                                        }}>Selecionar</button>
+                                                    </div>
+
                                                 </div>
                                             ))}
                                         </div>
