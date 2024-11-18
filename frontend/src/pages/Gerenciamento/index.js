@@ -119,16 +119,19 @@ export default function Gerenciamento() {
                 </div>
               )}
             </div>
-            <div className="flex justify-center mt-4">
-              <label className="mr-2 text-slate-900">Duração (s):</label>
-              <input
-                type="number"
-                min="1"
-                value={duracoes[midia.id] / 1000 || 1}
-                onChange={(e) => handleDurationChange(midia.id, e.target.value)}
-                className="w-16 border mb-3 border-slate-900 rounded-md text-center"
-              />
-            </div>
+
+            {midia.file_type !== "video" && ( // Condição para exibir o campo de duração apenas se não for vídeo
+              <div className="flex justify-center mt-4">
+                <label className="mr-2 text-slate-900">Duração (s):</label>
+                <input
+                  type="number"
+                  min="1"
+                  value={duracoes[midia.id] / 1000 || 1}
+                  onChange={(e) => handleDurationChange(midia.id, e.target.value)}
+                  className="w-16 border mb-3 border-slate-900 rounded-md text-center"
+                />
+              </div>
+            )}
           </div>
         ))}
       </div>
