@@ -130,7 +130,7 @@ export default function PopUpNovaPlaylist({ setShowPopUp }) {
                                                 >
                                                     <span className="text-sm">
                                                         {midia.file_original_name.length > 20
-                                                            ? `${midia.file_original_name.substring(0, 20)}...`
+                                                            ? `${midia.file_original_name.substring(0, 10)}...`
                                                             : midia.file_original_name}
                                                     </span>
                                                     <button type="button" className="text-sm w-20 rounded-lg bg-red-500" onClick={() => removeMedia(midia)}>Remover</button>

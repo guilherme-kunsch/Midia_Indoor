@@ -98,7 +98,9 @@ export default function Gerenciamento() {
                 className="cursor-pointer"
                 onClick={() => handleDelete(midia.id)}
               />
-              <h1 className="text-white w-full mr-6">{midia.file_original_name}</h1>
+              <h1 className="text-white w-full mr-6">{midia.file_original_name.length > 20
+                ? `${midia.file_original_name.substring(0, 10)}...`
+                : midia.file_original_name}</h1>
             </div>
 
             <div className="h-60 justify-center flex text-center m-auto items-center">

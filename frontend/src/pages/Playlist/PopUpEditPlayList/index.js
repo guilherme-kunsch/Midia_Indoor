@@ -102,9 +102,9 @@ export default function PopUpEditPlaylist({ setShowPopUpEdit, playlist }) {
                                                     key={index}
                                                     className="flex text-start my-2 py-1 px-2 overflow-hidden hover:bg-dark-blue hover:text-white rounded-lg justify-between"
                                                 >
-                                                    <span className="text-sm w-4 ">
+                                                    <span className="text-sm w-4 h-5  ">
                                                         {midia.file_original_name.length > 20
-                                                            ? `${midia.file_original_name.substring(0, 30)}...`
+                                                            ? `${midia.file_original_name.substring(0, 20)}...`
                                                             : midia.file_original_name}
                                                     </span>
                                                     <div className="flex justify-center gap-3">
