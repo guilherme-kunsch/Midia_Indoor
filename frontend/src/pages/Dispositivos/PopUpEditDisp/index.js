@@ -8,6 +8,7 @@ export default function EditDeviceModal({ closeEditDeviceModal, device }) {
     const [ playlistDisp, setPlaylistDisp ] = useState(null)
     const [playListId, setPlayListId] = useState("")
     const [ nomeDisp, setNomeDisp ] = useState(device.name)
+    const [ isSenha, setIsSenha ] = useState(true)
     const fetchData = async () => {
         try {
         
@@ -99,6 +100,15 @@ export default function EditDeviceModal({ closeEditDeviceModal, device }) {
                                     <option key={index} value={play.id} selected={playlistDisp && play.name === playlistDisp.name}>{play.name}</option>
                                 ))}
                             </select>
+                            <label className="block text-black my-4 flex">
+                                <input
+                                    className="mr-2"
+                                    type="checkbox"
+                                    checked={isSenha}
+                                    onChange={() => setIsSenha(!isSenha)}
+                                />
+                                Tela de senha?
+                            </label>
                         </div>
 
                         <div className="absolute justify-center bottom-0 w-full mb-8">
