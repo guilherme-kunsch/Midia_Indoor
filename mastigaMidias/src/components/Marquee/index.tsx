@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import { FaTemperatureHigh } from "react-icons/fa6";
+import { FaStopwatch } from "react-icons/fa6";
+
 const Marquee = () => {
     const [time, setTime] = useState(new Date());
     const [temperature, setTemperature] = useState("");
@@ -7,6 +10,7 @@ const Marquee = () => {
     const [euroRate, setEuroRate] = useState("6.00");
     const [ varBidEuro, setVarBidEuro ] = useState(true)
     const [noticias, setNoticias] = useState<string[]>([]);
+
 
 
     useEffect(() => {
@@ -91,14 +95,14 @@ const Marquee = () => {
 
     return (
         <div className="bg-dark-purple h-[10%] w-full flex items-center text-white">
-            <div className="w-5/6 border-r-4">
-                <span className="mx-8">Hora: {time.toLocaleTimeString()}</span>
-                <span className="mx-8">Temp: {temperature} °C</span>
-                <span className="ml-8">Dólar: </span>
+            <div className="w-[85%] border-r-4 flex">
+                <span className="mx-8 flex"><FaStopwatch className="flex mt-1 mr-2"/> {time.toLocaleTimeString()}</span>
+                <span className="mx-8 flex "><FaTemperatureHigh className="flex mt-1 mr-2"/> {temperature} °C</span>
+                <span className="ml-8 mr-2">USD/BRL: </span>
                 <span className={`mr-8 ${varBidDollar ? "text-green-600" : "text-red-600"}`}>
                     R$ {dollarRate}
                 </span>
-                <span className="ml-8">Euro: </span>
+                <span className="ml-8 mr-2">EUR/BRL: </span>
                 <span className={`mr-8 ${varBidEuro ? "text-green-600" : "text-red-600"}`}>
                     R$ {euroRate}
                 </span>
