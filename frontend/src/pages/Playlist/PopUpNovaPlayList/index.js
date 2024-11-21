@@ -18,11 +18,6 @@ export default function PopUpNovaPlaylist({ setShowPopUp }) {
         setShowPopUp(false);
     };
 
-    useEffect(() => {
-        console.log("teste")
-        toast.success("Toast está funcionando!");
-    }, []);
-
     const handleSubmit = (event) => {
         event.preventDefault();
         closeModal();
@@ -53,6 +48,7 @@ export default function PopUpNovaPlaylist({ setShowPopUp }) {
         } catch (error) {
             toast.error("Erro ao cadastrar playlist, procure os mastigadores.");
             console.error(error.message);
+
         }
     };
 
@@ -62,6 +58,7 @@ export default function PopUpNovaPlaylist({ setShowPopUp }) {
             const midias = response.data;
             if (midias) {
                 setMidias(midias);
+
             }
         }
     };
@@ -96,16 +93,20 @@ export default function PopUpNovaPlaylist({ setShowPopUp }) {
                                         <h3 className="text-black">Mídias</h3>
                                         <div className="bg-white text-black h-72 border border-dark-blue pb-24 overflow-scroll">
                                             {midias.map((midia, index) => (
-                                                <div
-                                                    key={index}
-                                                    className="flex text-start my-2 py-1 px-2 hover:bg-dark-blue hover:text-white rounded-lg justify-between"
-                                                >
-                                                    <span className="text-sm">{midia.file_original_name}</span>
-                                                    <button className="text-sm w-20 bg-blue-500 rounded-lg" type="button" onClick={() => openPreviewModal(midia)}>Preview</button>
-                                                    <button className="text-sm w-20 bg-green-500 rounded-lg" type="button" onClick={() => {
-                                                        setSelectedMidia(state => [...state, midia]);
-                                                        setMidias(midias.filter(m => m.id !== midia.id));
-                                                    }}>Selecionar</button>
+
+                                                <div key={index} className="flex text-start  my-2 py-1 px-2 overflow-hidden hover:bg-dark-blue hover:text-white rounded-lg justify-between"  >
+                                                    <span className="text-sm w-4 ">
+                                                        {midia.file_original_name.length > 20
+                                                            ? `${midia.file_original_name.substring(0, 20)}...`
+                                                            : midia.file_original_name}
+                                                    </span>
+                                                    <div className=" flex justify-center gap-4">
+                                                        <button className="text-sm w-20 bg-blue-500 rounded-lg" type="button" onClick={() => openPreviewModal(midia)}>Preview</button>
+                                                        <button className="text-sm w-20 bg-green-500 rounded-lg" type="button" onClick={() => {
+                                                            setSelectedMidia(state => [...state, midia])
+                                                            setMidias(midias.filter(m => m.id != midia.id))
+                                                        }}>Selecionar</button>
+                                                    </div>
                                                 </div>
                                             ))}
                                         </div>
@@ -119,7 +120,11 @@ export default function PopUpNovaPlaylist({ setShowPopUp }) {
                                                     key={index}
                                                     className="flex text-start my-2 py-1 px-2 hover:bg-dark-blue hover:text-white rounded-lg justify-between"
                                                 >
-                                                    <span className="text-sm">{midia.file_original_name}</span>
+                                                    <span className="text-sm">
+                                                        {midia.file_original_name.length > 20
+                                                            ? `${midia.file_original_name.substring(0, 20)}...`
+                                                            : midia.file_original_name}
+                                                    </span>
                                                     <button type="button" className="text-sm w-20 rounded-lg bg-red-500" onClick={() => removeMedia(midia)}>Remover</button>
                                                 </div>
                                             ))}

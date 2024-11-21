@@ -1,60 +1,79 @@
 import React, { useState, useEffect } from "react";
 import SideBar from "../../components/SideBar";
+import api from "../../api/api";
 
 export default function GerenciarSenhas() {
-  const [senhasNormais, setSenhasNormais] = useState([]);
-  const [senhasPreferenciais, setSenhasPreferenciais] = useState([]);
-  const [indexNormal, setIndexNormal] = useState(0);
-  const [indexPreferencial, setIndexPreferencial] = useState(0);
 
-  const [ senhaAtualP, setSenhaAtualP] = useState("")
-  const [ senhaAtualN, setSenhaAtualN] = useState("")
-
-  useEffect(() => {
-    const fetchSenhas = async () => {
-      try {
-        const response = await fetch(
-          "https://mastigadores-api.onrender.com/password"
-        );
-        const data = await response.json();
-
-        // Filtra as senhas recebidas em normais e preferenciais
-        const senhasNormais = data.filter((senha) => senha.password.startsWith("N"));
-        const senhasPreferenciais = data.filter((senha) => senha.password.startsWith("P"));
-
-        setSenhasNormais(senhasNormais);
-        setSenhasPreferenciais(senhasPreferenciais);
+  const [senhaNormal, setSenhaNormal] = useState({});
+  const [senhaPreferencial, setSenhaPreferencial] = useState({});
+  const [senhaNormaisCriadas ,setSenhasNormaisCriadas] = useState([])
+  const [senhaPreferenciasCriadas ,setSenhasPreferenciasCriadas] = useState([])
+  const fetchSenhas = async () => {
+    try {
+      const normalPasswordResponse = await api.get("/password/atual?type=N")
+      if(normalPasswordResponse.status === 200 ) {
+          setSenhaNormal(normalPasswordResponse.data)
+      }
+      const preferencialPasswordResponse = await api.get("/password/atual?type=P")
+      if(preferencialPasswordResponse.status === 200) {
+          setSenhaPreferencial(preferencialPasswordResponse.data)
+      }
+    } catch (error) {
+      console.error("Erro ao buscar senhas:", error);
+    }
+  };
+  const fetchCreatedPassword = async () => {
+    try {
+        const normalPasswordResponse = await api.get("/password?type=N")
+        if(normalPasswordResponse.status === 200 ) {
+            setSenhasNormaisCriadas(normalPasswordResponse.data)
+        }
+        const preferencialPasswordResponse = await api.get("/password?type=P")
+        if(preferencialPasswordResponse.status === 200) {
+            setSenhasPreferenciasCriadas(preferencialPasswordResponse.data)
+        }
       } catch (error) {
         console.error("Erro ao buscar senhas:", error);
       }
-    };
-
+  }
+  useEffect(() => {
     fetchSenhas();
+    fetchCreatedPassword()
   }, []);
 
-  const handlePreviousPassword = (isPreferencial) => {
-    if (isPreferencial) {
-      if (indexPreferencial > 0) setIndexPreferencial(indexPreferencial - 1);
-    } else {
-      if (indexNormal > 0) setIndexNormal(indexNormal - 1);
+  const handlePreviousPassword = async (passwordType) => {
+    const response = await api.post("/password?op=sub&type="+passwordType)
+    if(response.status === 201) {
+        if(passwordType === "N") {
+            setSenhaNormal(response.data)
+        } else {
+            setSenhaPreferencial(response.data)
+        }
     }
   };
 
-  const handleNextPassword = (isPreferencial) => {
-    if (isPreferencial) {
-      if (indexPreferencial < senhasPreferenciais.length - 1)
-        setIndexPreferencial(indexPreferencial + 1);
-    } else {
-      if (indexNormal < senhasNormais.length - 1)
-        setIndexNormal(indexNormal + 1);
+  const handleNextPassword = async (passwordType) => {
+    const response = await api.post("/password?op=add&type="+passwordType)
+    if(response.status === 201) {
+        if(passwordType === "N") {
+            setSenhaNormal(response.data)
+        } else {
+            setSenhaPreferencial(response.data)
+        }
     }
   };
-
-  const handleResetPassword = () => {
-    setIndexNormal(0);
-    setIndexPreferencial(0);
-  };
-
+  const handleResetPassword = async (passwordType) => {
+    const response = await api.delete("/password/reset?type="+passwordType)
+    if(response.status === 200) {
+        if(passwordType === "N") {
+            await fetchSenhas()
+            await fetchCreatedPassword(passwordType)
+        } else {
+            await fetchSenhas()
+            await fetchCreatedPassword(passwordType)
+        }
+    }
+  }
   return (
     <div className="w-full">
       <SideBar title={"GERENCIAR SENHAS"} />
@@ -67,29 +86,30 @@ export default function GerenciarSenhas() {
 
         <div className="w-full h-70 bg-gray-200 py-8 px-20 rounded-lg">
           <h1 className="text-black mb-4 text-3xl font-bold">Senha Normal</h1>
-          <div className="mb-8 border">
-            <div className="flex flex-col justify-center items-center">
+
+          <div className="grid grid-cols-3 gap-8 mb-8 border">
+            <div className="flex flex-col items-center">
               <p className="text-black font-bold">Senha Atual</p>
-              <h3 className="text-black font-bold justify-center text-center w-full bg-gray-300 p-4 rounded-lg">
-                {senhasNormais[indexNormal]?.password || "N/A"}
+              <h3 className="text-black font-bold text-center w-full bg-gray-300 p-4 rounded-lg">
+                {senhaNormal.password ? senhaNormal.password : "Carregando"}
               </h3>
-            </div>            
-          </div>
+            </div>
+
           <div className="flex justify-between mt-8">
             <button
-              onClick={() => handlePreviousPassword(false)}
+              onClick={() => handlePreviousPassword("N")}
               className="bg-blue-500 text-white px-4 py-2 rounded-lg"
             >
               Senha Anterior
             </button>
             <button
-              onClick={() => handleNextPassword(false)}
+              onClick={() => handleNextPassword("N")}
               className="bg-blue-500 text-white px-4 py-2 rounded-lg"
             >
               Próxima Senha
             </button>
             <button
-              onClick={handleResetPassword}
+              onClick={() => handleResetPassword("N")}
               className="bg-red-500 text-white px-4 py-2 rounded-lg"
             >
               Resetar Senhas
@@ -101,31 +121,29 @@ export default function GerenciarSenhas() {
           <h1 className="text-black mb-4 text-3xl font-bold">
             Senha Preferencial
           </h1>
-          <div className="mb-8 border">
-           
+          <div className="grid grid-cols-3 gap-8 mb-8 border">
             <div className="flex flex-col items-center">
               <p className="text-black font-bold">Senha Atual</p>
               <h3 className="text-black font-bold text-center w-full bg-gray-300 p-4 rounded-lg">
-                {senhasPreferenciais[indexPreferencial]?.password || "N/A"}
+                {senhaPreferencial.password ? senhaPreferencial.password : "Carregando"}
               </h3>
             </div>
-            
           </div>
           <div className="flex justify-between mt-8">
             <button
-              onClick={() => handlePreviousPassword(true)}
+              onClick={() => handlePreviousPassword("P")}
               className="bg-blue-500 text-white px-4 py-2 rounded-lg"
             >
               Senha Anterior
             </button>
             <button
-              onClick={() => handleNextPassword(true)}
+              onClick={() => handleNextPassword("P")}
               className="bg-blue-500 text-white px-4 py-2 rounded-lg"
             >
               Próxima Senha
             </button>
             <button
-              onClick={handleResetPassword}
+              onClick={() => handleResetPassword("P")}
               className="bg-red-500 text-white px-4 py-2 rounded-lg"
             >
               Resetar Senhas
@@ -140,29 +158,27 @@ export default function GerenciarSenhas() {
               <h3 className="text-xl font-semibold mb-2 text-black">
                 Senhas Normais
               </h3>
-              <ul className="list-disc list-inside bg-gray-100 p-4 rounded-lg">
-                {senhasNormais.map((senha, index) => (
-                  <li className="text-black" key={index}>
-                    {senha.password}
-                  </li>
-                ))}
-              </ul>
+              {senhaNormaisCriadas && senhaNormaisCriadas.map(senhas => (<>
+                <ul className="list-disc list-inside bg-gray-100 p-4 rounded-lg">
+              {senhas.password}
+               </ul>
+              </>))}
+
             </div>
             <div className="w-1/2 p-4">
               <h3 className="text-xl font-semibold mb-2 text-black">
                 Senhas Preferenciais
               </h3>
-              <ul className="list-disc list-inside bg-gray-100 p-4 rounded-lg">
-                {senhasPreferenciais.map((senha, index) => (
-                  <li key={index} className="text-black font-semibold">
-                    {senha.password}
-                  </li>
-                ))}
-              </ul>
+              {senhaPreferenciasCriadas && senhaPreferenciasCriadas.map(senhas => (<>
+                <ul className="list-disc list-inside bg-gray-100 p-4 rounded-lg">
+              {senhas.password}
+               </ul>
+              </>))}
             </div>
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 }
