@@ -24,6 +24,8 @@ export const Content = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [cache, setCache] = useState<CacheInfo[] | null>(null);
 
+    const [ senhaOrMidia, setSenhaOrMidia ] = useState(false)
+
     const [ senhaAtual, setSenhaAtual] = useState<string>("N/A")
 
     const [senhas, setSenhas ] = useState<Password[]>([])
@@ -150,66 +152,110 @@ export const Content = () => {
         return <>Loading...</>;
     }
     const renderMidia = (midia: CacheInfo) => {
-        if (!midia) return null
-        const midiaClassName = "flex top-0 left-0 w-full max-h-1/4 object-cover"
-        switch (midia.fileType) {
-            case FILETYPES.TEXT:
-                return (
-                    <div className="w-full h-full flex justify-center items-center">
+        if(senhaOrMidia){
+
+            if (!midia) return null
+            const midiaClassName = "flex top-0 left-0 w-full max-h-1/4 object-cover"
+            switch (midia.fileType) {
+                case FILETYPES.TEXT:
+                    return (
+                        <div className="w-full h-full flex justify-center items-center">
                         <TextView content={midia.cacheData} className="text-center text-white text-3xl" />
                     </div>
                 );
-
-            case FILETYPES.VIDEO:
-                return (
-                    <div className="">
+                
+                case FILETYPES.VIDEO:
+                    return (
+                        <div className="">
                         <video
                             src={midia.cacheData}
                             className={midiaClassName}
                             autoPlay
                             muted
                             playsInline
-                        />
+                            />
                     </div>
                 );
-            case FILETYPES.IMAGE:
-                return (
-                    <div className="">
+                case FILETYPES.IMAGE:
+                    return (
+                        <div className="">
                         <img src={midia.cacheData} alt="" className={midiaClassName} />
                     </div>
                 );
-            default:
-                return null
+                default:
+                    return null
+                    
+                }
+        }else{
+
+            if (!midia) return null
+            const midiaClassName = "absolute top-0 left-0 w-full h-full object-cover"
+            switch (midia.fileType) {
+                case FILETYPES.TEXT:
+                    return (
+                        <div className="w-full h-full flex justify-center items-center">
+                            <TextView content={midia.cacheData} className="text-center text-white text-3xl" />
+                        </div>
+                    );
+
+                case FILETYPES.VIDEO:
+                    return (
+                        <div className="">
+                            <video
+                                src={midia.cacheData}
+                                className={midiaClassName}
+                                autoPlay
+                                muted
+                                playsInline
+                            />
+                        </div>
+                    );
+                case FILETYPES.IMAGE:
+                    return (
+                        <div className="">
+                            <img src={midia.cacheData} alt="" className={midiaClassName} />
+                        </div>
+                    );
+                default:
+                    return null
+
+            }
 
         }
     }
     console.log(senhaAtual)
     return (
-        <div className="h-screen w-screen flex flex-col">
-            <div className="flex h-[90%] w-full">
-                <div className="w-3/4 h-full overflow-hidden border-0 align-baseline list-none">
-                    {cache && cache.length > 0 && renderMidia(cache[currentIndex])}
-                </div>
-                <div className="w-1/4 h-full bg-dark-blue justify-center items-center">
-                    <div className="text-white">
-                        <div className="px-8 flex w-full bg-dark-purple justify-center py-2 border-t text-xl">
-                            <h2>Senha Atual</h2>
+        <>
+            {senhaOrMidia ? 
+                <div className="h-screen w-screen flex flex-col">
+                    <div className="flex h-[90%] w-full">
+                        <div className="w-3/4 h-full overflow-hidden border-0 align-baseline list-none">
+                            {cache && cache.length > 0 && renderMidia(cache[currentIndex])}
                         </div>
-                        <div className="flex text-center justify-center py-12 border-t text-6xl">
-                            <h2 className="animate-blink">{senhaAtual}</h2>
-                        </div>
-                        <div className="px-8 flex w-full bg-dark-purple justify-center py-2 border-t text-xl">
-                            <h2>Últimas Senha</h2>
-                        </div>
-                        {senhas && senhas.map(senha => (
-                            <div className="flex px-8 justify-center py-5 border-t text-3xl">
-                                <h2>{senha.password}</h2>
+                        <div className="w-1/4 h-full bg-dark-blue justify-center items-center">
+                            <div className="text-white">
+                                <div className="px-8 flex w-full bg-dark-purple justify-center py-2 border-t text-xl">
+                                    <h2>Senha Atual</h2>
+                                </div>
+                                <div className="flex text-center justify-center py-12 border-t text-6xl">
+                                    <h2 className="animate-blink">{senhaAtual}</h2>
+                                </div>
+                                <div className="px-8 flex w-full bg-dark-purple justify-center py-2 border-t text-xl">
+                                    <h2>Últimas Senha</h2>
+                                </div>
+                                {senhas && senhas.map(senha => (
+                                    <div className="flex px-8 justify-center py-5 border-t text-3xl">
+                                        <h2>{senha.password}</h2>
+                                    </div>
+                                ))}
                             </div>
-                        ))}
+                        </div>
                     </div>
+                    <Marquee/>
                 </div>
-            </div>
-            <Marquee/>
-        </div>
+                : 
+                <div className="h-full overflow-hidden p-0 m-0 border-0 align-baseline list-none">{cache && cache.length > 0 && renderMidia(cache[currentIndex])}</div>
+            }
+        </>
     );
 };

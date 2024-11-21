@@ -3,6 +3,7 @@ import SideBar from "../../components/SideBar";
 import api from "../../api/api";
 
 export default function GerenciarSenhas() {
+
   const [senhaNormal, setSenhaNormal] = useState({});
   const [senhaPreferencial, setSenhaPreferencial] = useState({});
   const [senhaNormaisCriadas ,setSenhasNormaisCriadas] = useState([])
@@ -85,6 +86,7 @@ export default function GerenciarSenhas() {
 
         <div className="w-full h-70 bg-gray-200 py-8 px-20 rounded-lg">
           <h1 className="text-black mb-4 text-3xl font-bold">Senha Normal</h1>
+
           <div className="grid grid-cols-3 gap-8 mb-8 border">
             <div className="flex flex-col items-center">
               <p className="text-black font-bold">Senha Atual</p>
