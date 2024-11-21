@@ -50,6 +50,7 @@ export default function GerenciarSenhas() {
             setSenhaPreferencial(response.data)
         }
     }
+    fetchCreatedPassword()
   };
 
   const handleNextPassword = async (passwordType) => {
@@ -61,6 +62,7 @@ export default function GerenciarSenhas() {
             setSenhaPreferencial(response.data)
         }
     }
+    fetchCreatedPassword()
   };
   const handleResetPassword = async (passwordType) => {
     const response = await api.delete("/password/reset?type="+passwordType)
@@ -73,55 +75,51 @@ export default function GerenciarSenhas() {
             await fetchCreatedPassword(passwordType)
         }
     }
+    fetchCreatedPassword()
   }
   return (
     <div className="w-full">
       <SideBar title={"GERENCIAR SENHAS"} />
-
-      <div className="mx-80 mt-24 space-y-8 justify-center text-center">
-        <div className="flex justify-between text-2xl font-semibold">
-          <h2>Senha Normal</h2>
-          <h2>Senha Preferencial</h2>
-        </div>
-
+  
+      <div className="mx-80 my-24 space-y-8 justify-center text-center">
         <div className="w-full h-70 bg-gray-200 py-8 px-20 rounded-lg">
           <h1 className="text-black mb-4 text-3xl font-bold">Senha Normal</h1>
-
-          <div className="grid grid-cols-3 gap-8 mb-8 border">
+  
+          <div className="grid flex border">
             <div className="flex flex-col items-center">
               <p className="text-black font-bold">Senha Atual</p>
               <h3 className="text-black font-bold text-center w-full bg-gray-300 p-4 rounded-lg">
                 {senhaNormal.password ? senhaNormal.password : "Carregando"}
               </h3>
             </div>
-
-          <div className="flex justify-between mt-8">
-            <button
-              onClick={() => handlePreviousPassword("N")}
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-            >
-              Senha Anterior
-            </button>
-            <button
-              onClick={() => handleNextPassword("N")}
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-            >
-              Próxima Senha
-            </button>
-            <button
-              onClick={() => handleResetPassword("N")}
-              className="bg-red-500 text-white px-4 py-2 rounded-lg"
-            >
-              Resetar Senhas
-            </button>
+  
+            <div className="flex justify-between mt-8">
+              <button
+                onClick={() => handlePreviousPassword("N")}
+                className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+              >
+                Senha Anterior
+              </button>
+              <button
+                onClick={() => handleNextPassword("N")}
+                className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+              >
+                Próxima Senha
+              </button>
+              <button
+                onClick={() => handleResetPassword("N")}
+                className="bg-red-500 text-white px-4 py-2 rounded-lg"
+              >
+                Resetar Senhas
+              </button>
+            </div>
           </div>
         </div>
-
+  
         <div className="w-full h-70 bg-gray-200 py-8 px-20 rounded-lg">
-          <h1 className="text-black mb-4 text-3xl font-bold">
-            Senha Preferencial
-          </h1>
-          <div className="grid grid-cols-3 gap-8 mb-8 border">
+          <h1 className="text-black mb-4 text-3xl font-bold">Senha Normal</h1>
+  
+          <div className="grid flex mb-4 border">
             <div className="flex flex-col items-center">
               <p className="text-black font-bold">Senha Atual</p>
               <h3 className="text-black font-bold text-center w-full bg-gray-300 p-4 rounded-lg">
@@ -150,35 +148,31 @@ export default function GerenciarSenhas() {
             </button>
           </div>
         </div>
-
-        <div className="w-full h-70 bg-gray-200 py-8 px-20 rounded-lg">
+  
+        <div className="w-full h-70 bg-gray-200 pt-8 rounded-lg">
           <h2 className="text-2xl font-bold mb-4 text-black">Senhas Criadas</h2>
           <div className="flex justify-between">
             <div className="w-1/2 p-4">
-              <h3 className="text-xl font-semibold mb-2 text-black">
-                Senhas Normais
-              </h3>
-              {senhaNormaisCriadas && senhaNormaisCriadas.map(senhas => (<>
-                <ul className="list-disc list-inside bg-gray-100 p-4 rounded-lg">
-              {senhas.password}
-               </ul>
-              </>))}
-
+              <h3 className="text-xl font-semibold mb-2 text-black">Senhas Normais</h3>
+              {senhaNormaisCriadas &&
+                senhaNormaisCriadas.map((senhas) => (
+                  <ul className="list-disc list-inside bg-gray-300 text-black font-bold p-4 rounded-lg" key={senhas.password}>
+                    {senhas.password}
+                  </ul>
+                ))}
             </div>
             <div className="w-1/2 p-4">
-              <h3 className="text-xl font-semibold mb-2 text-black">
-                Senhas Preferenciais
-              </h3>
-              {senhaPreferenciasCriadas && senhaPreferenciasCriadas.map(senhas => (<>
-                <ul className="list-disc list-inside bg-gray-100 p-4 rounded-lg">
-              {senhas.password}
-               </ul>
-              </>))}
+              <h3 className="text-xl font-semibold mb-2 text-black">Senhas Preferenciais</h3>
+              {senhaPreferenciasCriadas &&
+                senhaPreferenciasCriadas.map((senhas) => (
+                  <ul className="list-disc list-inside bg-gray-300 text-black font-bold p-4 mb-2 rounded-lg" key={senhas.password}>
+                    {senhas.password}
+                  </ul>
+                ))}
             </div>
           </div>
         </div>
       </div>
-    </div>
     </div>
   );
 }

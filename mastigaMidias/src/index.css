@@ -28,5 +28,5 @@ body, html {
 .marquee-content {
   display: inline-flex;
   min-width: 100%;
-  animation: scrollText 30s linear infinite;
+  animation: scrollText 70s linear infinite;
 }

@@ -4,13 +4,9 @@ import api from "../../../api/api";
 export default function PopUpNewDisp({ setShowPopUp }) {
 
     const [ playlists, setPlaylists ] = useState([])
-
     const [ playlistDisp, setPlaylistDisp ] = useState('')
-
     const [ nomeDisp, setNomeDisp ] = useState('')
-
     const [ isSenha, setIsSenha ] = useState(true)
-
 
     useEffect(() => {
         const fetchData = async () => {
@@ -35,7 +31,7 @@ export default function PopUpNewDisp({ setShowPopUp }) {
             const data = {
                 name: nomeDisp,
                 playlist_id: playlistDisp,
-                tipe: isSenha
+                type: isSenha
             }
 
             const response = await api.post("/device", data);

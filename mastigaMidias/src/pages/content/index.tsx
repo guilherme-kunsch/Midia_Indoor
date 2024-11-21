@@ -50,16 +50,21 @@ export const Content = () => {
     if(!playlistId) return <>Loading...</>
     if(!senhaAtual) return <>Loading...</>
     if(!senhas) return <>Loading...</>
+    if(!deviceId) return <>Loading...</>
 
     useEffect(() => {
         const fetchCache = async () => {
             const playlist = await fetchPlaylistFromAPI(playlistId!);
             const fetchedCache = await fillCache(playlist);
+            const device = await fetchDeviceFromAPI(deviceId)
+            setSenhaOrMidia(device.type)
             atualizaSenhas()
             setCache(fetchedCache);
         };
         fetchCache();
-    }, [playlistId]);
+    }, [playlistId, deviceId]);
+
+
     const onMessage = async (topic: string, message: Buffer) => {
         if (topic === playlistId) {
             const msg = message.toString()
@@ -223,13 +228,13 @@ export const Content = () => {
 
         }
     }
-    console.log(senhaAtual)
+    
     return (
         <>
             {senhaOrMidia ? 
                 <div className="h-screen w-screen flex flex-col">
-                    <div className="flex h-[90%] w-full">
-                        <div className="w-3/4 h-full overflow-hidden border-0 align-baseline list-none">
+                    <div className="flex h-[90%] items-center w-full">
+                        <div className="w-3/4 h-full overflow-hidden border-0 align-baseline list-none flex items-center justify-center">
                             {cache && cache.length > 0 && renderMidia(cache[currentIndex])}
                         </div>
                         <div className="w-1/4 h-full bg-dark-blue justify-center items-center">
