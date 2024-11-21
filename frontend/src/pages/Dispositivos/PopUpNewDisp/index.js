@@ -9,6 +9,8 @@ export default function PopUpNewDisp({ setShowPopUp }) {
 
     const [ nomeDisp, setNomeDisp ] = useState('')
 
+    const [ isSenha, setIsSenha ] = useState(true)
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -32,7 +34,8 @@ export default function PopUpNewDisp({ setShowPopUp }) {
 
             const data = {
                 name: nomeDisp,
-                playlist_id: playlistDisp
+                playlist_id: playlistDisp,
+                tipe: isSenha
             }
 
             const response = await api.post("/device", data);
@@ -90,6 +93,15 @@ export default function PopUpNewDisp({ setShowPopUp }) {
                                     <option value={play.id}>{play.name}</option>
                                 ))}
                             </select>
+                            <label className="block text-black my-4 flex">
+                                <input
+                                    className="mr-2"
+                                    type="checkbox"
+                                    checked={isSenha}
+                                    onChange={() => setIsSenha(!isSenha)}
+                                />
+                                Tela de senha?
+                            </label>
                         </div>
 
                         <div className="absolute justify-center bottom-0 w-full mb-8">
