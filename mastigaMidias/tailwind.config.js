@@ -22,7 +22,7 @@ export default {
             keyframes: {
                 scrollText: {
                     '0%': { transform: 'translateX(100%)' },
-                    '100%': { transform: 'translateX(-700%)' },
+                    '100%': { transform: 'translateX(-1000%)' },
                 },
                 blink: {
                     '0%, 100%': { opacity: 1 },
@@ -30,7 +30,7 @@ export default {
                 },
             },
             animation: {
-                scrollText: 'scrollText 30s linear infinite',
+                scrollText: 'scrollText 70s linear infinite',
                 blink: 'blink 1s ease-in-out infinite',
             },
         }

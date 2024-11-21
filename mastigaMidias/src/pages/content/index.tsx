@@ -233,8 +233,8 @@ export const Content = () => {
         <>
             {senhaOrMidia ? 
                 <div className="h-screen w-screen flex flex-col">
-                    <div className="flex h-[90%] w-full">
-                        <div className="w-3/4 h-full overflow-hidden border-0 align-baseline list-none">
+                    <div className="flex h-[90%] items-center w-full">
+                        <div className="w-3/4 h-full overflow-hidden border-0 align-baseline list-none flex items-center justify-center">
                             {cache && cache.length > 0 && renderMidia(cache[currentIndex])}
                         </div>
                         <div className="w-1/4 h-full bg-dark-blue justify-center items-center">
