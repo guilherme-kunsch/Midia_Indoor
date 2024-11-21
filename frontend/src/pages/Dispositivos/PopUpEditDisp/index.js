@@ -8,7 +8,7 @@ export default function EditDeviceModal({ closeEditDeviceModal, device }) {
     const [ playlistDisp, setPlaylistDisp ] = useState(null)
     const [playListId, setPlayListId] = useState("")
     const [ nomeDisp, setNomeDisp ] = useState(device.name)
-    const [ isSenha, setIsSenha ] = useState(true)
+    const [ isSenha, setIsSenha ] = useState(device.type)
     const fetchData = async () => {
         try {
         
@@ -42,7 +42,8 @@ export default function EditDeviceModal({ closeEditDeviceModal, device }) {
             
             const data = {
                 name: nomeDisp,
-                playlist_id: playListId
+                playlist_id: playListId,
+                type: isSenha
             }
             
             const response = await api.patch(`/device/${device.id}`, data);
