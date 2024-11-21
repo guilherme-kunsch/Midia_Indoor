@@ -176,7 +176,6 @@ export const Content = () => {
                             src={midia.cacheData}
                             className={midiaClassName}
                             autoPlay
-                            muted
                             playsInline
                             />
                     </div>
