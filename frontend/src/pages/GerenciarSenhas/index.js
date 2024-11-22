@@ -87,8 +87,8 @@ export default function GerenciarSenhas() {
   
           <div className="grid flex border">
             <div className="flex flex-col items-center">
-              <p className="text-black font-bold">Senha Atual</p>
-              <h3 className="text-black font-bold text-center w-full bg-gray-300 p-4 rounded-lg">
+              <p className="text-black font-bold mb-2">Senha Atual</p>
+              <h3 className="text-white font-bold text-center w-[30%] bg-dark-blue p-4 rounded-lg">
                 {senhaNormal.password ? senhaNormal.password : "Carregando"}
               </h3>
             </div>
@@ -121,8 +121,8 @@ export default function GerenciarSenhas() {
   
           <div className="grid flex mb-4 border">
             <div className="flex flex-col items-center">
-              <p className="text-black font-bold">Senha Atual</p>
-              <h3 className="text-black font-bold text-center w-full bg-gray-300 p-4 rounded-lg">
+              <p className="text-black font-bold mb-2">Senha Atual</p>
+              <h3 className="text-white font-bold text-center w-[30%] bg-dark-blue p-4 rounded-lg">
                 {senhaPreferencial.password ? senhaPreferencial.password : "Carregando"}
               </h3>
             </div>
@@ -156,7 +156,7 @@ export default function GerenciarSenhas() {
               <h3 className="text-xl font-semibold mb-2 text-black">Senhas Normais</h3>
               {senhaNormaisCriadas &&
                 senhaNormaisCriadas.map((senhas) => (
-                  <ul className="list-disc list-inside bg-gray-300 text-black font-bold p-4 rounded-lg" key={senhas.password}>
+                  <ul className="list-disc list-inside bg-dark-blue text-white font-bold p-4 mb-2 rounded-lg" key={senhas.password}>
                     {senhas.password}
                   </ul>
                 ))}
@@ -165,7 +165,7 @@ export default function GerenciarSenhas() {
               <h3 className="text-xl font-semibold mb-2 text-black">Senhas Preferenciais</h3>
               {senhaPreferenciasCriadas &&
                 senhaPreferenciasCriadas.map((senhas) => (
-                  <ul className="list-disc list-inside bg-gray-300 text-black font-bold p-4 mb-2 rounded-lg" key={senhas.password}>
+                  <ul className="list-disc list-inside bg-dark-blue text-white font-bold p-4 mb-2 rounded-lg" key={senhas.password}>
                     {senhas.password}
                   </ul>
                 ))}
