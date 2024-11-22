@@ -95,7 +95,7 @@ const Marquee = () => {
 
     return (
         <div className="bg-dark-purple h-[10%] w-full flex items-center text-white">
-            <div className="w-[85%] border-r-4 flex">
+            <div className="w-[90%] border-r-4 flex">
                 <span className="mx-8 flex"><FaStopwatch className="flex mt-1 mr-2"/> {time.toLocaleTimeString()}</span>
                 <span className="mx-8 flex "><FaTemperatureHigh className="flex mt-1 mr-2"/> {temperature} °C</span>
                 <span className="ml-8 mr-2">USD/BRL: </span>
