@@ -117,7 +117,7 @@ export default function GerenciarSenhas() {
         </div>
   
         <div className="w-full h-70 bg-gray-200 py-8 px-20 rounded-lg">
-          <h1 className="text-black mb-4 text-3xl font-bold">Senha Normal</h1>
+          <h1 className="text-black mb-4 text-3xl font-bold">Senha Preferencial</h1>
   
           <div className="grid flex mb-4 border">
             <div className="flex flex-col items-center">
